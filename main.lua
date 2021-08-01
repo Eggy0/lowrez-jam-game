@@ -24,7 +24,7 @@ function love.load()
 	local resolutionTestGrid = anim8.newGrid(64,64,resolutionTest:getWidth(), resolutionTest:getHeight())
 	resolutionTestAnimation = anim8.newAnimation(resolutionTestGrid('1-3',1),0.1)
 	
-	local gameBackgroundGrid = anim8.newGrid(64,64,gameBackgroundTest:getWidth(), resolutionTest:getHeight())
+	local gameBackgroundGrid = anim8.newGrid(64,64,gameBackgroundTest:getWidth(), gameBackgroundTest:getHeight())
 	gameBackgroundAnimation = anim8.newAnimation(gameBackgroundGrid('1-7',1),0.1)
 
 end
@@ -48,6 +48,7 @@ function love.draw()
 
 	--gameBackgroundAnimation:draw(gameBackgroundTest,0,0)
 	gameBackgroundAnimation:draw(gameBackgroundTest,backgroundX,backgroundY)
+	gameBackgroundAnimation:draw(gameBackgroundTest,backgroundX,backgroundY-gameBackgroundTest:getHeight())
 
 	makeCanvas()
 
