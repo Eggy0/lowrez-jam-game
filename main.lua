@@ -4,7 +4,9 @@ local anim8 = require ("anim8")
 local resolutionTest, resolutionTestAnimation
 
 function love.load()
-
+	-- This allows debugging in zbstudio
+	if arg[#arg] == '-debug' then require('mobdebug').start() end
+	
 	canvas = love.graphics.newCanvas(canvas_width, canvas_height)
 	canvas:setFilter("linear","nearest")
 	
