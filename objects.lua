@@ -16,7 +16,7 @@ end
 ---asteroid object
 function objects.spawnAsteroid(asteroidX, asteroidY)
 	objectAsteroid = {}
-	objectAsteroid.Sprite = asteroidGraphics[chance.core.random(1, #asteroidGraphics)]
+	objectAsteroid.Sprite = asteroidGraphics[love.math.random(#asteroidGraphics)]
 	objectAsteroid.x = asteroidX
 	objectAsteroid.y = asteroidY
 	table.insert(asteroidList,objectAsteroid)
