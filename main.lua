@@ -26,6 +26,12 @@ function love.load()
 	
 	local gameBackgroundGrid = anim8.newGrid(64,64,gameBackgroundTest:getWidth(), gameBackgroundTest:getHeight())
 	gameBackgroundAnimation = anim8.newAnimation(gameBackgroundGrid('1-7',1),0.1)
+	
+	--Load gameObject graphics (player ship, asteroids etc.)
+	playerShip = love.graphics.newImage('graphics/gameObjectShip.png')
+	asteroid1 = love.graphics.newImage('graphics/gameObjectAsteroid1.png')
+	asteroid2 = love.graphics.newImage('graphics/gameObjectAsteroid2.png')
+	asteroid3 = love.graphics.newImage('graphics/gameObjectAsteroid3.png')
 
 end
 
@@ -46,9 +52,14 @@ function love.draw()
 	love.graphics.setCanvas(canvas)
 	love.graphics.clear()
 
-	--gameBackgroundAnimation:draw(gameBackgroundTest,0,0)
 	gameBackgroundAnimation:draw(gameBackgroundTest,backgroundX,backgroundY)
 	gameBackgroundAnimation:draw(gameBackgroundTest,backgroundX,backgroundY-gameBackgroundTest:getHeight())
+	
+	--Test gameObject graphics
+	love.graphics.draw(playerShip, 31,50)
+	love.graphics.draw(asteroid1, 24,24)
+	love.graphics.draw(asteroid2, 31,24)
+	love.graphics.draw(asteroid3, 40,24)
 
 	makeCanvas()
 
