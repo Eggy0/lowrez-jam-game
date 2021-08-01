@@ -1,5 +1,9 @@
+local objects = {}
+
 --playerShip object
-function spawnPlayerShip(playerShipX, playerShipY)
+asteroidList = {}
+
+function objects.spawnPlayerShip(playerShipX, playerShipY)
 	objectPlayerShip = {}
 	objectPlayerShip.Sprite = playerShip
 	objectPlayerShip.Health = 3
@@ -10,9 +14,12 @@ end
 
 
 ---asteroid object
-function spawnAsteroid(asteroidX, asteroidY)
+function objects.spawnAsteroid(asteroidX, asteroidY)
 	objectAsteroid = {}
 	objectAsteroid.Sprite = asteroidGraphics[math.random(#asteroidGraphics)]
 	objectAsteroid.x = asteroidX
 	objectAsteroid.y = asteroidY
+	table.insert(asteroidList,objectAsteroid)
 end
+
+return objects

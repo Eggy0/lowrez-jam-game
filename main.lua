@@ -1,6 +1,7 @@
 require("graphics")
 local anim8 = require ("anim8")
 
+
 local resolutionTest, resolutionTestAnimation
 local backgroundX, backgroundY, backgroundYTimer
 
@@ -37,7 +38,13 @@ function love.load()
 	table.insert(asteroidGraphics,love.graphics.newImage('graphics/gameObjectAsteroid3.png'))
 	
 	--Load the objects
-	require("objects")
+	objects = require("objects")
+	--Spawn asteroid object with random sprite
+	objects.spawnAsteroid(16, 8)
+	objects.spawnAsteroid(24, 8)
+	objects.spawnAsteroid(31, 8)
+	objects.spawnAsteroid(40, 8)
+	objects.spawnAsteroid(48, 8)
 
 end
 
@@ -61,15 +68,18 @@ function love.draw()
 	gameBackgroundAnimation:draw(gameBackgroundTest,backgroundX,backgroundY)
 	gameBackgroundAnimation:draw(gameBackgroundTest,backgroundX,backgroundY-gameBackgroundTest:getHeight())
 	
-	--Spawn asteroid object with random sprite
-	spawnAsteroid(31, 8)
+
 	
 	--Test gameObject graphics
 	love.graphics.draw(playerShip, 31,50)
 	love.graphics.draw(asteroidGraphics[1], 24,24)
 	love.graphics.draw(asteroidGraphics[2], 31,24)
 	love.graphics.draw(asteroidGraphics[3], 40,24)
-	love.graphics.draw(objectAsteroid.Sprite, objectAsteroid.x,objectAsteroid.y)
+	
+	for i,v in ipairs(asteroidList) do
+		love.graphics.draw(v.Sprite, v.x,v.y)
+	end
+
 
 	makeCanvas()
 
