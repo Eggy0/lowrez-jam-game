@@ -1,7 +1,7 @@
 local objects = {}
 
 --playerShip object
-asteroidList = {}
+
 
 function objects.spawnPlayerShip(playerShipX, playerShipY)
 	objectPlayerShip = {}
@@ -10,10 +10,12 @@ function objects.spawnPlayerShip(playerShipX, playerShipY)
 	objectPlayerShip.Velocity = 1
 	objectPlayerShip.x = playerShipX
 	objectPlayerShip.y = playerShipY
+
 end
 
 
 ---asteroid object
+asteroidList = {}
 function objects.spawnAsteroid(asteroidX, asteroidY)
 	objectAsteroid = {}
 	objectAsteroid.Sprite = asteroidGraphics[love.math.random(#asteroidGraphics)]
