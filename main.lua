@@ -1,4 +1,4 @@
-require("graphics")
+graphics = require("graphics")
 local anim8 = require ("anim8")
 
 
@@ -81,7 +81,7 @@ function love.draw()
 	end
 
 
-	makeCanvas()
+	graphics.makeCanvas()
 
 
 end
