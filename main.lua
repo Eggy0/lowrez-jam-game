@@ -10,7 +10,7 @@ function love.load()
 	
 	resolutionTest = love.graphics.newImage("test.png")
 	local resolutionTestGrid = anim8.newGrid(64,64,resolutionTest:getWidth(), resolutionTest:getHeight())
-	local resolutionTestAnimation = anim8.newAnimation(resolutionTestGrid('1-3',1),0.3)
+	resolutionTestAnimation = anim8.newAnimation(resolutionTestGrid('1-3',1),0.3)
 
 end
 
