@@ -1,5 +1,8 @@
 graphics = require("graphics")
 local anim8 = require ("anim8")
+chance = require("chance")
+local seed = math.random()
+chance.core.seed(seed)
 
 
 local resolutionTest, resolutionTestAnimation
