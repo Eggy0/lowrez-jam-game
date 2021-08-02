@@ -18,7 +18,7 @@ function love.load()
 	if arg[#arg] == '-debug' then require('mobdebug').start() end
 
 	canvas = love.graphics.newCanvas(canvas_width, canvas_height)
-	canvas:setFilter("linear","nearest")
+	canvas:setFilter("nearest","nearest")
 	
 	resolutionTest = love.graphics.newImage("test.png")
 	gameBackgroundTest = love.graphics.newImage("gameplay_background_test.png")
@@ -30,12 +30,9 @@ function love.load()
 	gameBackgroundAnimation = anim8.newAnimation(gameBackgroundGrid('1-7',1),0.1)
 	
 	--Load gameObject graphics (player ship, asteroids etc.)
-	playerShip = love.graphics.newImage('graphics/gameObjectShip.png')
-	
-	asteroidGraphics = {}
-	table.insert(asteroidGraphics,love.graphics.newImage('graphics/gameObjectAsteroid1.png'))
-	table.insert(asteroidGraphics,love.graphics.newImage('graphics/gameObjectAsteroid2.png'))
-	table.insert(asteroidGraphics,love.graphics.newImage('graphics/gameObjectAsteroid3.png'))
+
+	graphics.loadGraphics()
+
 	
 	--Load the objects
 	objects = require("objects")
@@ -51,13 +48,17 @@ end
 
 function love.update(dt)
 
-	--Note to self: make the background infinitely tile, somehow
+
+	objects.playerShipControls(dt)
 	
 	gameBackgroundAnimation:update(dt)
 	backgroundYTimer = backgroundYTimer + 1*dt
-	if backgroundYTimer >= 0.5 then
+	if backgroundYTimer >= 0.1 then
 		backgroundY = backgroundY + 1
 		backgroundYTimer = 0
+	end
+	if backgroundY > 64 then --This makes it "tile" seamlessly
+		backgroundY = backgroundY - 64
 	end
 
 end

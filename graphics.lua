@@ -4,6 +4,18 @@ local canvas_width = 64
 local canvas_height = 64
 
 
+function graphics.loadGraphics()
+
+	playerShip = love.graphics.newImage('graphics/gameObjectShip.png')
+	
+	asteroidGraphics = {}
+	table.insert(asteroidGraphics,love.graphics.newImage('graphics/gameObjectAsteroid1.png'))
+	table.insert(asteroidGraphics,love.graphics.newImage('graphics/gameObjectAsteroid2.png'))
+	table.insert(asteroidGraphics,love.graphics.newImage('graphics/gameObjectAsteroid3.png'))
+	
+end
+
+
 function graphics.makeCanvas()
 	love.graphics.setCanvas()
     love.graphics.clear()

@@ -7,9 +7,25 @@ function objects.spawnPlayerShip(playerShipX, playerShipY)
 	objectPlayerShip = {}
 	objectPlayerShip.Sprite = playerShip
 	objectPlayerShip.Health = 3
-	objectPlayerShip.Velocity = 1
+	objectPlayerShip.Velocity = 40
 	objectPlayerShip.x = playerShipX
 	objectPlayerShip.y = playerShipY
+
+end
+
+function objects.playerShipControls(deltaShip)
+	if love.keyboard.isDown("up") then
+		objectPlayerShip.y = objectPlayerShip.y - objectPlayerShip.Velocity*deltaShip
+	end
+	if love.keyboard.isDown("down") then
+		objectPlayerShip.y = objectPlayerShip.y + objectPlayerShip.Velocity*deltaShip
+	end
+	if love.keyboard.isDown("left") then
+		objectPlayerShip.x = objectPlayerShip.x - objectPlayerShip.Velocity*deltaShip
+	end
+		if love.keyboard.isDown("right") then
+		objectPlayerShip.x = objectPlayerShip.x + objectPlayerShip.Velocity*deltaShip
+	end
 
 end
 
