@@ -41,11 +41,6 @@ function love.load()
 	--Load the objects
 	objects = require("objects")
 	--Spawn asteroid object with random sprite
-	objects.spawnAsteroid(16, 8)
-	objects.spawnAsteroid(24, 8)
-	objects.spawnAsteroid(31, 8)
-	objects.spawnAsteroid(40, 8)
-	objects.spawnAsteroid(48, 8)
 	objects.spawnPlayerShip(31,64)
 
 end
@@ -54,6 +49,8 @@ function love.update(dt)
 
 
 	objects.playerShipControls(dt)
+	
+	objects.moveAsteroid(dt)
 	
 	gameBackgroundAnimation:update(dt)
 	backgroundYTimer = backgroundYTimer + 1*dt
@@ -81,11 +78,17 @@ function love.draw()
 	objects.drawThruster()
 	
 	for i,v in ipairs(asteroidList) do
-		love.graphics.draw(v.Sprite, v.x,v.y,0,1,1,4,4)
+		love.graphics.draw(v.Sprite, math.round(v.x),math.round(v.y),0,1,1,4,4)
 	end
 
 
 	graphics.makeCanvas()
 
 
+end
+
+function love.keypressed(key)
+	if key == "space" then
+		objects.spawnAsteroid(asteroidRandomX[love.math.random(#asteroidRandomX)], love.math.random(0,56))
+	end
 end

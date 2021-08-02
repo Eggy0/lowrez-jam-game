@@ -45,16 +45,35 @@ end
 
 ---asteroid object
 asteroidList = {}
-asteroidDirectionList = {"toLeft","toRight"}
+asteroidDirList = {"toLeft","toRight"}
 asteroidSpinningDir = {"clockwise","counterclockwise"}
+asteroidRandomX = {-4,68}
+
 function objects.spawnAsteroid(asteroidX, asteroidY)
 	objectAsteroid = {}
 	objectAsteroid.Sprite = asteroidGraphics[love.math.random(#asteroidGraphics)]
 	objectAsteroid.x = asteroidX
 	objectAsteroid.y = asteroidY
-	objectAsteroid.direction = 0
-	objectAsteroid.Velocity = 0
+	
+	if objectAsteroid.x < 32 then
+		objectAsteroid.Dir = asteroidDirList[2]
+	else
+		objectAsteroid.Dir = asteroidDirList[1]
+	end
+	
+	objectAsteroid.SpinDir = asteroidSpinningDir[love.math.random(#asteroidSpinningDir)]
+	objectAsteroid.Velocity = love.math.random(15,40)
 	table.insert(asteroidList,objectAsteroid)
+end
+
+function objects.moveAsteroid(deltaDebris)
+	for i,v in ipairs(asteroidList) do
+		if v.Dir == "toLeft" then
+			v.x = v.x - v.Velocity*deltaDebris
+		elseif v.Dir == "toRight" then
+			v.x = v.x + v.Velocity*deltaDebris
+		end
+	end
 end
 
 return objects
