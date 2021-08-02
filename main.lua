@@ -46,7 +46,7 @@ function love.load()
 	objects.spawnAsteroid(31, 8)
 	objects.spawnAsteroid(40, 8)
 	objects.spawnAsteroid(48, 8)
-	objects.spawnPlayerShip(31,50)
+	objects.spawnPlayerShip(31,64)
 
 end
 
@@ -77,13 +77,11 @@ function love.draw()
 
 	
 	--Test gameObject graphics
-	love.graphics.draw(objectPlayerShip.Sprite, math.round(objectPlayerShip.x), math.round(objectPlayerShip.y))
-	love.graphics.draw(asteroidGraphics[1], 24,24)
-	love.graphics.draw(asteroidGraphics[2], 31,24)
-	love.graphics.draw(asteroidGraphics[3], 40,24)
+	love.graphics.draw(objectPlayerShip.Sprite, math.round(objectPlayerShip.x), math.round(objectPlayerShip.y),0,1,1,4,8)
+	objects.drawThruster()
 	
 	for i,v in ipairs(asteroidList) do
-		love.graphics.draw(v.Sprite, v.x,v.y)
+		love.graphics.draw(v.Sprite, v.x,v.y,0,1,1,4,4)
 	end
 
 
