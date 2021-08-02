@@ -16,15 +16,16 @@ end
 function objects.playerShipControls(deltaShip)
 	if love.keyboard.isDown("up") then
 		objectPlayerShip.y = objectPlayerShip.y - objectPlayerShip.Velocity*deltaShip
-	end
-	if love.keyboard.isDown("down") then
+	elseif love.keyboard.isDown("down") then
 		objectPlayerShip.y = objectPlayerShip.y + objectPlayerShip.Velocity*deltaShip
-	end
-	if love.keyboard.isDown("left") then
+	elseif love.keyboard.isDown("left") then
 		objectPlayerShip.x = objectPlayerShip.x - objectPlayerShip.Velocity*deltaShip
-	end
-		if love.keyboard.isDown("right") then
+	elseif love.keyboard.isDown("right") then
 		objectPlayerShip.x = objectPlayerShip.x + objectPlayerShip.Velocity*deltaShip
+	
+	else
+		objectPlayerShip.x = math.round(objectPlayerShip.x)
+		objectPlayerShip.y = math.round(objectPlayerShip.y)
 	end
 
 end
