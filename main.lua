@@ -16,6 +16,10 @@ function love.load()
 
 	-- This allows debugging in zbstudio
 	if arg[#arg] == '-debug' then require('mobdebug').start() end
+	
+	math.round = function(n)
+		return math.floor(n + 0.5)
+	end
 
 	canvas = love.graphics.newCanvas(canvas_width, canvas_height)
 	canvas:setFilter("nearest","nearest")
@@ -73,7 +77,7 @@ function love.draw()
 
 	
 	--Test gameObject graphics
-	love.graphics.draw(objectPlayerShip.Sprite, objectPlayerShip.x, objectPlayerShip.y)
+	love.graphics.draw(objectPlayerShip.Sprite, math.round(objectPlayerShip.x), math.round(objectPlayerShip.y))
 	love.graphics.draw(asteroidGraphics[1], 24,24)
 	love.graphics.draw(asteroidGraphics[2], 31,24)
 	love.graphics.draw(asteroidGraphics[3], 40,24)
