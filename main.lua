@@ -51,6 +51,7 @@ function love.update(dt)
 	objects.playerShipControls(dt)
 	
 	objects.moveAsteroid(dt)
+	objects.rotateAsteroid(dt)
 	
 	gameBackgroundAnimation:update(dt)
 	backgroundYTimer = backgroundYTimer + 1*dt
@@ -78,7 +79,7 @@ function love.draw()
 	objects.drawThruster()
 	
 	for i,v in ipairs(asteroidList) do
-		love.graphics.draw(v.Sprite, math.round(v.x),math.round(v.y),0,1,1,4,4)
+		love.graphics.draw(v.Sprite, math.round(v.x),math.round(v.y),v.Rotation,1,1,4,4)
 	end
 
 

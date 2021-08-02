@@ -62,6 +62,8 @@ function objects.spawnAsteroid(asteroidX, asteroidY)
 	end
 	
 	objectAsteroid.SpinDir = asteroidSpinningDir[love.math.random(#asteroidSpinningDir)]
+	objectAsteroid.SpinVel = love.math.random(0,10)
+	objectAsteroid.Rotation = love.math.random(0,10)
 	objectAsteroid.Velocity = love.math.random(15,40)
 	table.insert(asteroidList,objectAsteroid)
 end
@@ -72,6 +74,16 @@ function objects.moveAsteroid(deltaDebris)
 			v.x = v.x - v.Velocity*deltaDebris
 		elseif v.Dir == "toRight" then
 			v.x = v.x + v.Velocity*deltaDebris
+		end
+	end
+end
+
+function objects.rotateAsteroid(deltaDebris)
+	for i,v in ipairs(asteroidList) do
+		if v.SpinDir == "clockwise" then
+			v.Rotation = v.Rotation + v.SpinVel*deltaDebris
+		elseif v.SpinDir == "countercloclwise" then
+			v.Rotation = v.Rotation - v.SpinVel*deltaDebris
 		end
 	end
 end
