@@ -85,9 +85,15 @@ function love.update(dt)
 	for i,v in ipairs(asteroidList) do
 		if CheckCollision(objectPlayerShip.x-1,objectPlayerShip.y-6,11,11, v.x+3,v.y+3,3,3) then
 			collisionCheck = "Yes"
+			objectPlayerShip.Health= objectPlayerShip.Health - 1
 		else
 			collisionCheck = "No"
 		end
+
+		if v.x >= 90 or v.x <= -32 or v.y >= 90 then --Asteroid removal code
+			table.remove(asteroidList,self)
+		end
+		
 	end
 	audio.Update()
 
