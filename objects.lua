@@ -7,6 +7,7 @@ function objects.spawnPlayerShip(playerShipX, playerShipY)
 	objectPlayerShip = {}
 	objectPlayerShip.Sprite = playerShip
 	objectPlayerShip.Health = 3
+	objectPlayerShip.Score = 0
 	objectPlayerShip.Velocity = 40
 	objectPlayerShip.x = playerShipX
 	objectPlayerShip.y = playerShipY
@@ -83,7 +84,7 @@ function objects.rotateAsteroid(deltaDebris)
 		if v.SpinDir == "clockwise" then
 			v.Rotation = v.Rotation + v.SpinVel*deltaDebris
 		elseif v.SpinDir == "countercloclwise" then
-			v.Rotation = v.Rotation - v.SpinVel*deltaDebris
+			v.Rotation = v.Rotation + (v.SpinVel*deltaDebris)*-1
 		end
 	end
 end

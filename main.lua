@@ -1,13 +1,13 @@
 graphics = require("graphics")
+audio = require ("audio")
 local anim8 = require ("anim8")
-
 
 local resolutionTest, resolutionTestAnimation
 local backgroundX, backgroundY, backgroundYTimer
 
 function love.load()
 
-	
+	font = love.graphics.newFont(8)
 	
 	backgroundX = 0
 	backgroundY = 0
@@ -42,6 +42,10 @@ function love.load()
 	objects = require("objects")
 	--Spawn asteroid object with random sprite
 	objects.spawnPlayerShip(31,64)
+	
+	audio.setTrack(audio.Track1)
+	
+	audio.loadedTrack:play()
 
 end
 
@@ -62,6 +66,9 @@ function love.update(dt)
 	if backgroundY > 64 then --This makes it "tile" seamlessly
 		backgroundY = backgroundY - 64
 	end
+	
+	objectPlayerShip.Score = objectPlayerShip.Score + 5*dt
+	audio.Update()
 
 end
 
@@ -81,7 +88,15 @@ function love.draw()
 	for i,v in ipairs(asteroidList) do
 		love.graphics.draw(v.Sprite, math.round(v.x),math.round(v.y),v.Rotation,1,1,4,4)
 	end
-
+	
+	--We just print variables as a test.
+		love.graphics.setFont(font)
+		love.graphics.print(objectPlayerShip.Health,0,0)
+		love.graphics.print(objectPlayerShip.Score,56,0) --Need to figure out how to make it padded so it fits on the screen.
+		love.graphics.print(audio.loopStart,8,8)
+		love.graphics.print(audio.position,8,16)
+		love.graphics.print(audio.loopEnd,8,24)
+		
 
 	graphics.makeCanvas()
 
@@ -91,5 +106,13 @@ end
 function love.keypressed(key)
 	if key == "space" then
 		objects.spawnAsteroid(asteroidRandomX[love.math.random(#asteroidRandomX)], love.math.random(0,56))
+	end
+	if key == "m" then
+		audio.loadedTrack:stop()
+		audio.setTrack(audio.Track2)
+		audio.loadedTrack:play()
+	end
+	if key == "l" then --We use this to test the audio loop
+		audio.loadedTrack:seek(audio.loopEnd-321935,"samples")
 	end
 end
