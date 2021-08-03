@@ -79,8 +79,7 @@ function love.update(dt)
 	if backgroundY > 64 then --This makes it "tile" seamlessly
 		backgroundY = backgroundY - 64
 	end
-	
-	objectPlayerShip.Score = objectPlayerShip.Score + 5*dt
+
 	
 	for i,v in ipairs(asteroidList) do
 		if CheckCollision(objectPlayerShip.x-1,objectPlayerShip.y-6,11,11, v.x+3,v.y+3,3,3) then
@@ -90,8 +89,8 @@ function love.update(dt)
 			collisionCheck = "No"
 		end
 
-		if v.x >= 90 or v.x <= -32 or v.y >= 90 then --Asteroid removal code
-			table.remove(asteroidList,self)
+		if v.x >= 70 or v.x <= -10 or v.y >= 70 then --Asteroid removal code
+			table.remove(asteroidList,i)
 		end
 		
 	end
@@ -106,7 +105,7 @@ function love.draw()
 	gameBackgroundAnimation:draw(gameBackgroundTest,backgroundX,backgroundY)
 	gameBackgroundAnimation:draw(gameBackgroundTest,backgroundX,backgroundY-gameBackgroundTest:getHeight())
 	
-
+ 
 	
 	--Test gameObject graphics
 	love.graphics.draw(objectPlayerShip.Sprite, math.round(objectPlayerShip.x), math.round(objectPlayerShip.y),0,1,1,4,8)
@@ -136,7 +135,7 @@ function love.keypressed(key)
 	if key == "space" then
 		objects.spawnAsteroid(asteroidRandomX[love.math.random(#asteroidRandomX)], love.math.random(0,56))
 	end
-	if key == "m" then
+	if key == "m" then --Load alternate track
 		audio.loadedTrack:stop()
 		audio.setTrack(audio.Track2)
 		audio.loadedTrack:play()
