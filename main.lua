@@ -4,10 +4,21 @@ local anim8 = require ("anim8")
 
 local resolutionTest, resolutionTestAnimation
 local backgroundX, backgroundY, backgroundYTimer
+collisionCheck = "No"
+
+function CheckCollision(x1,y1,w1,h1, x2,y2,w2,h2)
+  return x1 < x2+w2 and
+         x2 < x1+w1 and
+         y1 < y2+h2 and
+         y2 < y1+h1
+end
 
 function love.load()
-
-	font = love.graphics.newFont(8)
+	love.graphics.setDefaultFilter('nearest', 'nearest')
+	
+	
+	
+	font = love.graphics.newFont(8) --Debug only
 	
 	backgroundX = 0
 	backgroundY = 0
@@ -36,7 +47,7 @@ function love.load()
 	--Load gameObject graphics (player ship, asteroids etc.)
 
 	graphics.loadGraphics()
-
+	canvas:setFilter("nearest","nearest")
 	
 	--Load the objects
 	objects = require("objects")
@@ -46,6 +57,8 @@ function love.load()
 	audio.setTrack(audio.Track1)
 	
 	audio.loadedTrack:play()
+	
+	objects.spawnAsteroid(32,16,0)
 
 end
 
@@ -68,6 +81,14 @@ function love.update(dt)
 	end
 	
 	objectPlayerShip.Score = objectPlayerShip.Score + 5*dt
+	
+	for i,v in ipairs(asteroidList) do
+		if CheckCollision(objectPlayerShip.x-1,objectPlayerShip.y-6,11,11, v.x+3,v.y+3,3,3) then
+			collisionCheck = "Yes"
+		else
+			collisionCheck = "No"
+		end
+	end
 	audio.Update()
 
 end
@@ -87,15 +108,17 @@ function love.draw()
 	
 	for i,v in ipairs(asteroidList) do
 		love.graphics.draw(v.Sprite, math.round(v.x),math.round(v.y),v.Rotation,1,1,4,4)
+
 	end
 	
 	--We just print variables as a test.
 		love.graphics.setFont(font)
 		love.graphics.print(objectPlayerShip.Health,0,0)
 		love.graphics.print(objectPlayerShip.Score,56,0) --Need to figure out how to make it padded so it fits on the screen.
-		love.graphics.print(audio.loopStart,8,8)
-		love.graphics.print(audio.position,8,16)
-		love.graphics.print(audio.loopEnd,8,24)
+		--love.graphics.print(audio.loopStart,8,8)
+		--love.graphics.print(audio.position,8,16)
+		--love.graphics.print(audio.loopEnd,8,24)
+		love.graphics.print("Collision: " .. collisionCheck,8,40)
 		
 
 	graphics.makeCanvas()
