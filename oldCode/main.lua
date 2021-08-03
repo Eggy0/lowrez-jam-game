@@ -1,19 +1,24 @@
-<<<<<<< Updated upstream
 graphics = require("graphics")
+audio = require ("audio")
 local anim8 = require ("anim8")
-=======
-graphics = require("code/graphics")
-audio = require ("code/audio")
-local anim8 = require ("code/anim8")
->>>>>>> Stashed changes
-
 
 local resolutionTest, resolutionTestAnimation
 local backgroundX, backgroundY, backgroundYTimer
+collisionCheck = "No"
+
+function CheckCollision(x1,y1,w1,h1, x2,y2,w2,h2)
+  return x1 < x2+w2 and
+         x2 < x1+w1 and
+         y1 < y2+h2 and
+         y2 < y1+h1
+end
 
 function love.load()
-
+	love.graphics.setDefaultFilter('nearest', 'nearest')
 	
+	
+	
+	font = love.graphics.newFont(8) --Debug only
 	
 	backgroundX = 0
 	backgroundY = 0
@@ -42,12 +47,18 @@ function love.load()
 	--Load gameObject graphics (player ship, asteroids etc.)
 
 	graphics.loadGraphics()
-
+	canvas:setFilter("nearest","nearest")
 	
 	--Load the objects
-	objects = require("code/objects")
+	objects = require("objects")
 	--Spawn asteroid object with random sprite
 	objects.spawnPlayerShip(31,64)
+	
+	audio.setTrack(audio.Track1)
+	
+	audio.loadedTrack:play()
+	
+	objects.spawnAsteroid(32,16,0)
 
 end
 
@@ -69,6 +80,22 @@ function love.update(dt)
 		backgroundY = backgroundY - 64
 	end
 
+	
+	for i,v in ipairs(asteroidList) do
+		if CheckCollision(objectPlayerShip.x-1,objectPlayerShip.y-6,11,11, v.x+3,v.y+3,3,3) then
+			collisionCheck = "Yes"
+			objectPlayerShip.Health= objectPlayerShip.Health - 1
+		else
+			collisionCheck = "No"
+		end
+
+		if v.x >= 70 or v.x <= -10 or v.y >= 70 then --Asteroid removal code
+			table.remove(asteroidList,i)
+		end
+		
+	end
+	audio.Update()
+
 end
 
 function love.draw()
@@ -78,7 +105,7 @@ function love.draw()
 	gameBackgroundAnimation:draw(gameBackgroundTest,backgroundX,backgroundY)
 	gameBackgroundAnimation:draw(gameBackgroundTest,backgroundX,backgroundY-gameBackgroundTest:getHeight())
 	
-
+ 
 	
 	--Test gameObject graphics
 	love.graphics.draw(objectPlayerShip.Sprite, math.round(objectPlayerShip.x), math.round(objectPlayerShip.y),0,1,1,4,8)
@@ -86,8 +113,18 @@ function love.draw()
 	
 	for i,v in ipairs(asteroidList) do
 		love.graphics.draw(v.Sprite, math.round(v.x),math.round(v.y),v.Rotation,1,1,4,4)
-	end
 
+	end
+	
+	--We just print variables as a test.
+		love.graphics.setFont(font)
+		love.graphics.print(objectPlayerShip.Health,0,0)
+		love.graphics.print(objectPlayerShip.Score,56,0) --Need to figure out how to make it padded so it fits on the screen.
+		--love.graphics.print(audio.loopStart,8,8)
+		--love.graphics.print(audio.position,8,16)
+		--love.graphics.print(audio.loopEnd,8,24)
+		love.graphics.print("Collision: " .. collisionCheck,8,40)
+		
 
 	graphics.makeCanvas()
 
@@ -97,5 +134,13 @@ end
 function love.keypressed(key)
 	if key == "space" then
 		objects.spawnAsteroid(asteroidRandomX[love.math.random(#asteroidRandomX)], love.math.random(0,56))
+	end
+	if key == "m" then --Load alternate track
+		audio.loadedTrack:stop()
+		audio.setTrack(audio.Track2)
+		audio.loadedTrack:play()
+	end
+	if key == "l" then --We use this to test the audio loop
+		audio.loadedTrack:seek(audio.loopEnd-321935,"samples")
 	end
 end
