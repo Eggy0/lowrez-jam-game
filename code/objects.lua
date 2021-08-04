@@ -62,24 +62,23 @@ function objects.spawnPolice(policeY) --The police ship will always follow the p
 	objectPolice.Sprite = policeShip
 	objectPolice.Health = 3
 	objectPolice.Score = 0
-	objectPolice.Velocity = 10
+	objectPolice.Velocity = 20
 	objectPolice.x = objectPlayerShip.x
 	objectPolice.y = policeY
 	objectPlayerShip.Thruster = false
 end
 
 function objects.policeFollow(deltaPolice)
-    for i=objectPolice.x,objectPlayerShip.x do
-        if i < objectPlayerShip.x then
+        if objectPolice.x < objectPlayerShip.x then
             objectPolice.x = objectPolice.x + objectPolice.Velocity*deltaPolice
         end
-        if i > objectPlayerShip.x then
+        if objectPolice.x > objectPlayerShip.x then
             objectPolice.x = objectPolice.x - objectPolice.Velocity*deltaPolice
         end
-
-    end
         
 end
+
+        
 
 
 
