@@ -39,11 +39,11 @@ function game:enter()
 	end
 	audio.setTrack(audio.Track1)
 	audio.loadedTrack:play()
-	
-	objects.spawnAsteroid(32,16,0)
+
 end
 
 function game:update(dt)
+	flux.update(dt)
 	objects.policeFollow(dt)
 	blinkTimer = blinkTimer + 1*dt
 	if blinkTimer >= 0.05 then
@@ -89,12 +89,11 @@ function game:update(dt)
 end
 
 function game:draw()
-	
 	gameBackgroundAnimation:draw(gameBackgroundTest,backgroundX,backgroundY)
 	gameBackgroundAnimation:draw(gameBackgroundTest,backgroundX,backgroundY-gameBackgroundTest:getHeight())
 	
 	drawPlayerShip()
-	love.graphics.draw(objectPolice.Sprite, math.round(objectPolice.x), math.round(objectPolice.y),0,1,1,19,22)
+	love.graphics.draw(objectPolice.Sprite, math.round(objectPolice.x), math.round(objectPolice.y),0,1,1,20,22)
 	
 	objects.drawThruster()
 	for i=0,objectPlayerShip.Health-1 do
@@ -109,11 +108,11 @@ function game:draw()
 	--We just print variables as a test.
 		love.graphics.setFont(font)
 
-		love.graphics.print(objectPlayerShip.iframe,56,0) --Need to figure out how to make it padded so it fits on the screen.
+		--love.graphics.print(objectPlayerShip.iframe,56,0) --Need to figure out how to make it padded so it fits on the screen.
 		--love.graphics.print(audio.loopStart,8,8)
 		--love.graphics.print(audio.position,8,16)
 		--love.graphics.print(audio.loopEnd,8,24)
-		love.graphics.print("Collision: " .. collisionCheck,8,40)
+		--love.graphics.print("Collision: " .. collisionCheck,8,40)
 		
 		graphics.makeCanvas()
 

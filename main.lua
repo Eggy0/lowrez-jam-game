@@ -3,6 +3,7 @@ audio = require ("code/audio")
 objects = require("code/objects")
 Gamestate = require ("code/gamestate")
 anim8 = require ("code/anim8")
+flux = require("code/flux")
 local resolutionTest, resolutionTestAnimation
 local backgroundX, backgroundY, backgroundYTimer
 

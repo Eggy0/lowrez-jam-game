@@ -69,12 +69,13 @@ function objects.spawnPolice(policeY) --The police ship will always follow the p
 end
 
 function objects.policeFollow(deltaPolice)
-        if objectPolice.x < objectPlayerShip.x then
+        --[[if objectPolice.x < objectPlayerShip.x then
             objectPolice.x = objectPolice.x + objectPolice.Velocity*deltaPolice
         end
         if objectPolice.x > objectPlayerShip.x then
             objectPolice.x = objectPolice.x - objectPolice.Velocity*deltaPolice
-        end
+        end]]
+		flux.to(objectPolice, 20*deltaPolice, {x = objectPlayerShip.x, y = objectPlayerShip.y + 32}):ease("linear"):delay(10*deltaPolice)
         
 end
 
