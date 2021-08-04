@@ -17,6 +17,15 @@ function objects.spawnPlayerShip(playerShipX, playerShipY)
 
 end
 
+function drawPlayerShip()
+	if objectPlayerShip.iframe >0 then
+	love.graphics.setColor( 1, 1, 1, blink)
+	end
+	love.graphics.draw(objectPlayerShip.Sprite, math.round(objectPlayerShip.x), math.round(objectPlayerShip.y),0,1,1,4,8)
+	love.graphics.setColor( 1, 1, 1, 1)
+end
+
+
 function objects.playerShipControls(deltaShip)
 	if love.keyboard.isDown("up") then
 		objectPlayerShip.y = objectPlayerShip.y - objectPlayerShip.Velocity*deltaShip
@@ -45,6 +54,33 @@ function objects.drawThruster()
 		love.graphics.draw(playerShipThruster, math.round(objectPlayerShip.x-4), math.round(objectPlayerShip.y))
 	end
 end
+
+---police ship
+
+function objects.spawnPolice(policeY) --The police ship will always follow the player ship's x.
+	objectPolice = {}
+	objectPolice.Sprite = policeShip
+	objectPolice.Health = 3
+	objectPolice.Score = 0
+	objectPolice.Velocity = 10
+	objectPolice.x = objectPlayerShip.x
+	objectPolice.y = policeY
+	objectPlayerShip.Thruster = false
+end
+
+function objects.policeFollow(deltaPolice)
+    for i=objectPolice.x,objectPlayerShip.x do
+        if i < objectPlayerShip.x then
+            objectPolice.x = objectPolice.x + objectPolice.Velocity*deltaPolice
+        end
+        if i > objectPlayerShip.x then
+            objectPolice.x = objectPolice.x - objectPolice.Velocity*deltaPolice
+        end
+
+    end
+        
+end
+
 
 
 ---asteroid object

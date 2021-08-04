@@ -32,6 +32,7 @@ function game:enter()
 
 
 	objects.spawnPlayerShip(31,64)
+	objects.spawnPolice(objectPlayerShip.y+8)
 	
 	if audio.loadedTrack ~= nil then
 		audio.loadedTrack:stop() --Stop the track if it's already playing
@@ -43,6 +44,7 @@ function game:enter()
 end
 
 function game:update(dt)
+	objects.policeFollow(dt)
 	blinkTimer = blinkTimer + 1*dt
 	if blinkTimer >= 0.05 then
 		blink = blink *-1
@@ -91,14 +93,9 @@ function game:draw()
 	gameBackgroundAnimation:draw(gameBackgroundTest,backgroundX,backgroundY)
 	gameBackgroundAnimation:draw(gameBackgroundTest,backgroundX,backgroundY-gameBackgroundTest:getHeight())
 	
- 
+	drawPlayerShip()
+	love.graphics.draw(objectPolice.Sprite, math.round(objectPolice.x), math.round(objectPolice.y),0,1,1,19,22)
 	
-	--Test gameObject graphics
-	if objectPlayerShip.iframe >0 then
-		love.graphics.setColor( 1, 1, 1, blink)
-	end
-	love.graphics.draw(objectPlayerShip.Sprite, math.round(objectPlayerShip.x), math.round(objectPlayerShip.y),0,1,1,4,8)
-	love.graphics.setColor( 1, 1, 1, 1)
 	objects.drawThruster()
 	for i=0,objectPlayerShip.Health-1 do
 			love.graphics.draw(playerShipHealth,0+(i*8),0)
