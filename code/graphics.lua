@@ -7,6 +7,7 @@ local canvas_height = 64
 function graphics.loadGraphics()
 
 	titleScreen = love.graphics.newImage('graphics/gameAssetTitleScreenTest.png')
+
 	
 	playerShip = love.graphics.newImage('graphics/gameObjectShip.png')
 	playerShipThruster = love.graphics.newImage('graphics/gameObjectShipThruster.png')

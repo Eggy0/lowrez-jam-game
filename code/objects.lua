@@ -57,25 +57,19 @@ end
 
 ---police ship
 
-function objects.spawnPolice(policeY) --The police ship will always follow the player ship's x.
+function objects.spawnPolice(policeX, policeY) --The police ship will always follow the player ship's x.
 	objectPolice = {}
 	objectPolice.Sprite = policeShip
 	objectPolice.Health = 3
 	objectPolice.Score = 0
-	objectPolice.Velocity = 20
-	objectPolice.x = objectPlayerShip.x
+	objectPolice.Velocity = 5
+	objectPolice.x = policeX
 	objectPolice.y = policeY
 	objectPlayerShip.Thruster = false
 end
 
 function objects.policeFollow(deltaPolice)
-        --[[if objectPolice.x < objectPlayerShip.x then
-            objectPolice.x = objectPolice.x + objectPolice.Velocity*deltaPolice
-        end
-        if objectPolice.x > objectPlayerShip.x then
-            objectPolice.x = objectPolice.x - objectPolice.Velocity*deltaPolice
-        end]]
-		flux.to(objectPolice, 20*deltaPolice, {x = objectPlayerShip.x, y = objectPlayerShip.y + 32}):ease("linear"):delay(10*deltaPolice)
+		flux.to(objectPolice, 20*deltaPolice*(distance/objectPolice.Velocity), {x = objectPlayerShip.x, y = objectPlayerShip.y + 32}):ease("quadout"):delay(10*deltaPolice)
         
 end
 
@@ -127,5 +121,9 @@ function objects.rotateAsteroid(deltaDebris)
 		end
 	end
 end
+
+--main menu
+
+
 
 return objects

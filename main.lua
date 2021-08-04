@@ -10,6 +10,8 @@ local backgroundX, backgroundY, backgroundYTimer
 menu = require("code/states/test1")
 game = require("code/states/test2")
 
+mainMenu = require("code/states/mainMenu")
+
 
 function love.load()
     love.graphics.setDefaultFilter('nearest', 'nearest')

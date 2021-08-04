@@ -10,6 +10,9 @@ function CheckCollision(x1,y1,w1,h1, x2,y2,w2,h2)
          y2 < y1+h1
 end
 
+function distanceFrom(x1,y1,x2,y2) return math.sqrt((x2 - x1) ^ 2 + (y2 - y1) ^ 2) end
+
+
 
 function game:enter()
     	backgroundX = 0
@@ -32,7 +35,7 @@ function game:enter()
 
 
 	objects.spawnPlayerShip(31,64)
-	objects.spawnPolice(objectPlayerShip.y+8)
+	objects.spawnPolice(31,128)
 	
 	if audio.loadedTrack ~= nil then
 		audio.loadedTrack:stop() --Stop the track if it's already playing
@@ -43,8 +46,10 @@ function game:enter()
 end
 
 function game:update(dt)
+	distance = distanceFrom(objectPlayerShip.x,objectPlayerShip.y,objectPolice.x,objectPolice.y)
 	flux.update(dt)
 	objects.policeFollow(dt)
+	objectPolice.Velocity = objectPolice.Velocity + 0.2*dt
 	blinkTimer = blinkTimer + 1*dt
 	if blinkTimer >= 0.05 then
 		blink = blink *-1
@@ -85,6 +90,7 @@ function game:update(dt)
 		end
 		
 	end
+
 	audio.Update()
 end
 
@@ -108,7 +114,8 @@ function game:draw()
 	--We just print variables as a test.
 		love.graphics.setFont(font)
 
-		--love.graphics.print(objectPlayerShip.iframe,56,0) --Need to figure out how to make it padded so it fits on the screen.
+		love.graphics.print(distance,24,0)
+		love.graphics.print(objectPolice.Velocity,24,8)
 		--love.graphics.print(audio.loopStart,8,8)
 		--love.graphics.print(audio.position,8,16)
 		--love.graphics.print(audio.loopEnd,8,24)
