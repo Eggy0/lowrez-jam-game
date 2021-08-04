@@ -8,7 +8,7 @@ function objects.spawnPlayerShip(playerShipX, playerShipY)
 	objectPlayerShip.Sprite = playerShip
 	objectPlayerShip.Health = 3
 	objectPlayerShip.Score = 0
-	objectPlayerShip.Velocity = 40
+	objectPlayerShip.Velocity = 100
 	objectPlayerShip.Score = 0
 	objectPlayerShip.x = playerShipX
 	objectPlayerShip.y = playerShipY
@@ -28,7 +28,7 @@ end
 
 function objects.playerShipControls(deltaShip)
 	if love.keyboard.isDown("up") then
-		objectPlayerShip.y = objectPlayerShip.y - objectPlayerShip.Velocity*deltaShip
+		objectPolice.y = objectPolice.y + objectPlayerShip.Velocity*deltaShip
 		objectPlayerShip.Thruster = true
 	elseif love.keyboard.isDown("down") then
 		objectPlayerShip.y = objectPlayerShip.y + objectPlayerShip.Velocity*deltaShip
@@ -83,7 +83,7 @@ asteroidDirList = {"toLeft","toRight"}
 asteroidSpinningDir = {"clockwise","counterclockwise"}
 asteroidRandomX = {-4,68}
 
-function objects.spawnAsteroid(asteroidX, asteroidY,asteroidVelocity)
+function objects.spawnAsteroid(asteroidX, asteroidY,asteroidVelocityX)
 	objectAsteroid = {}
 	objectAsteroid.Sprite = asteroidGraphics[love.math.random(#asteroidGraphics)]
 	objectAsteroid.x = asteroidX
@@ -98,7 +98,8 @@ function objects.spawnAsteroid(asteroidX, asteroidY,asteroidVelocity)
 	objectAsteroid.SpinDir = asteroidSpinningDir[love.math.random(#asteroidSpinningDir)]
 	objectAsteroid.SpinVel = love.math.random(0,10)
 	objectAsteroid.Rotation = love.math.random(0,10)
-	objectAsteroid.Velocity = asteroidVelocity or love.math.random(15,40)
+	objectAsteroid.VelocityX = asteroidVelocityX or love.math.random(15,40)
+	objectAsteroid.VelocityY = 0
 	table.insert(asteroidList,objectAsteroid)
 end
 

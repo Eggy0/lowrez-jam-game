@@ -34,7 +34,7 @@ function game:enter()
 
 
 
-	objects.spawnPlayerShip(31,64)
+	objects.spawnPlayerShip(31,16)
 	objects.spawnPolice(31,128)
 	
 	if audio.loadedTrack ~= nil then
@@ -48,6 +48,7 @@ end
 function game:update(dt)
 	distance = distanceFrom(objectPlayerShip.x,objectPlayerShip.y,objectPolice.x,objectPolice.y)
 	flux.update(dt)
+	objects.playerShipControls(dt)
 	objects.policeFollow(dt)
 	objectPolice.Velocity = objectPolice.Velocity + 0.2*dt
 	blinkTimer = blinkTimer + 1*dt
@@ -55,7 +56,7 @@ function game:update(dt)
 		blink = blink *-1
 		blinkTimer = 0
 	end
-    objects.playerShipControls(dt)
+    
 	objects.moveAsteroid(dt)
 	objects.rotateAsteroid(dt)
 	
