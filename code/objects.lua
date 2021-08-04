@@ -13,6 +13,7 @@ function objects.spawnPlayerShip(playerShipX, playerShipY)
 	objectPlayerShip.x = playerShipX
 	objectPlayerShip.y = playerShipY
 	objectPlayerShip.Thruster = false
+	objectPlayerShip.iframe = 0
 
 end
 
@@ -37,6 +38,7 @@ function objects.playerShipControls(deltaShip)
 	end
 
 end
+
 
 function objects.drawThruster()
 	if objectPlayerShip.Thruster then

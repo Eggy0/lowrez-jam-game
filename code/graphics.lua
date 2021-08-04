@@ -6,8 +6,11 @@ local canvas_height = 64
 
 function graphics.loadGraphics()
 
+	titleScreen = love.graphics.newImage('graphics/gameAssetTitleScreenTest.png')
+	
 	playerShip = love.graphics.newImage('graphics/gameObjectShip.png')
 	playerShipThruster = love.graphics.newImage('graphics/gameObjectShipThruster.png')
+	playerShipHealth = love.graphics.newImage('graphics/gameObjectHealth.png')
 	
 	asteroidGraphics = {}
 	table.insert(asteroidGraphics,love.graphics.newImage('graphics/gameObjectAsteroid1.png'))
