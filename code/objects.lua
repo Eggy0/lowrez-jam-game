@@ -69,7 +69,7 @@ function objects.spawnPolice(policeX, policeY) --The police ship will always fol
 end
 
 function objects.policeFollow(deltaPolice)
-		flux.to(objectPolice, 20*deltaPolice*(distance/objectPolice.Velocity), {x = objectPlayerShip.x, y = objectPlayerShip.y + 32}):ease("quadout"):delay(10*deltaPolice)
+		flux.to(objectPolice, 20*deltaPolice*(distance/objectPolice.Velocity), {x = objectPlayerShip.x, y = objectPlayerShip.y + 32}):ease("sineout"):delay(10*deltaPolice)
         
 end
 

@@ -3,6 +3,7 @@ local collisionCheck = "No"
 local blink = 1
 local blinkTimer = 0
 local Camera = require("code/camera")
+local worldY = 0
 
 function CheckCollision(x1,y1,w1,h1, x2,y2,w2,h2)
   return x1 < x2+w2 and
@@ -16,9 +17,9 @@ function distanceFrom(x1,y1,x2,y2) return math.sqrt((x2 - x1) ^ 2 + (y2 - y1) ^ 
 
 
 function game:enter()
-	cam = Camera(64, 64, { x = -32, y = -32})
-    backgroundX = 0
-	backgroundY = 0
+	cam = Camera(64, 64, { x = -32, y = worldY})
+  backgroundX = 0
+	backgroundY = worldY
 	backgroundYTimer = 0
 	
 	gameBackgroundTest = love.graphics.newImage("graphics/gameplay_background_test.png")
@@ -32,8 +33,8 @@ function game:enter()
 
 
 
-	objects.spawnPlayerShip(31,64)
-	objects.spawnPolice(31,128)
+	objects.spawnPlayerShip(31,worldY)
+	objects.spawnPolice(31,objectPlayerShip.y+128)
 
 	
 	if audio.loadedTrack ~= nil then
@@ -45,10 +46,12 @@ function game:enter()
 end
 
 function game:update(dt)
-	cam.y = math.round(objectPlayerShip.y*-0.70)
-	cam:update()
+	
+	
 	distance = distanceFrom(objectPlayerShip.x,objectPlayerShip.y,objectPolice.x,objectPolice.y)
 	flux.update(dt)
+  flux.to(cam, 0.2, {y = (objectPlayerShip.y)*-1})
+  cam:update()
 	objects.playerShipControls(dt)
 	objects.policeFollow(dt)
 	objectPolice.Velocity = objectPolice.Velocity + 0.2*dt
@@ -94,6 +97,7 @@ function game:update(dt)
 	end
 
 	audio.Update()
+  hudX, hudY = cam:getViewportPosition()
 end
 
 function game:draw()
@@ -106,7 +110,7 @@ function game:draw()
 	
 	objects.drawThruster()
 	for i=0,objectPlayerShip.Health-1 do
-			love.graphics.draw(playerShipHealth,0+(i*8),0)
+			love.graphics.draw(playerShipHealth,0+(i*8),hudY)
 	end
 	
 	for i,v in ipairs(asteroidList) do
@@ -117,8 +121,8 @@ function game:draw()
 	--We just print variables as a test.
 		love.graphics.setFont(font)
 
-		love.graphics.print(distance,24,0)
-		love.graphics.print(objectPolice.Velocity,24,8)
+		love.graphics.print(distance,24,objectPlayerShip.y-32)
+		love.graphics.print(objectPolice.Velocity,24,objectPlayerShip.y+8-32)
 		--love.graphics.print(audio.loopStart,8,8)
 		--love.graphics.print(audio.position,8,16)
 		--love.graphics.print(audio.loopEnd,8,24)
