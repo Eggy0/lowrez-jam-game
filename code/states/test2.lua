@@ -2,6 +2,7 @@ local game = {}
 local collisionCheck = "No"
 local blink = 1
 local blinkTimer = 0
+local Camera = require("code/camera")
 
 function CheckCollision(x1,y1,w1,h1, x2,y2,w2,h2)
   return x1 < x2+w2 and
@@ -15,15 +16,11 @@ function distanceFrom(x1,y1,x2,y2) return math.sqrt((x2 - x1) ^ 2 + (y2 - y1) ^ 
 
 
 function game:enter()
-    	backgroundX = 0
+    backgroundX = 0
 	backgroundY = 0
 	backgroundYTimer = 0
 	
-	resolutionTest = love.graphics.newImage("test.png")
-	gameBackgroundTest = love.graphics.newImage("gameplay_background_test.png")
-	
-	local resolutionTestGrid = anim8.newGrid(64,64,resolutionTest:getWidth(), resolutionTest:getHeight())
-	resolutionTestAnimation = anim8.newAnimation(resolutionTestGrid('1-3',1),0.1)
+	gameBackgroundTest = love.graphics.newImage("graphics/gameplay_background_test.png")
 	
 	local gameBackgroundGrid = anim8.newGrid(64,64,gameBackgroundTest:getWidth(), gameBackgroundTest:getHeight())
 	gameBackgroundAnimation = anim8.newAnimation(gameBackgroundGrid('1-7',1),0.1)
@@ -34,8 +31,9 @@ function game:enter()
 
 
 
-	objects.spawnPlayerShip(31,16)
+	objects.spawnPlayerShip(31,64)
 	objects.spawnPolice(31,128)
+		gameCamera = Camera.new(objectPlayerShip.x,objectPlayerShip.y)
 	
 	if audio.loadedTrack ~= nil then
 		audio.loadedTrack:stop() --Stop the track if it's already playing
@@ -46,6 +44,8 @@ function game:enter()
 end
 
 function game:update(dt)
+	gameCamera:lockY(objectPlayerShip.y)
+	--gameCamera:move(objectPlayerShip.x*dt,objectPlayerShip.y*dt)
 	distance = distanceFrom(objectPlayerShip.x,objectPlayerShip.y,objectPolice.x,objectPolice.y)
 	flux.update(dt)
 	objects.playerShipControls(dt)
@@ -96,6 +96,7 @@ function game:update(dt)
 end
 
 function game:draw()
+	gameCamera:attach()
 	gameBackgroundAnimation:draw(gameBackgroundTest,backgroundX,backgroundY)
 	gameBackgroundAnimation:draw(gameBackgroundTest,backgroundX,backgroundY-gameBackgroundTest:getHeight())
 	
@@ -123,7 +124,7 @@ function game:draw()
 		--love.graphics.print("Collision: " .. collisionCheck,8,40)
 		
 		graphics.makeCanvas()
-
+	gameCamera:detach()
 end
 
 
@@ -143,5 +144,6 @@ function love.keypressed(key)
 		Gamestate.switch(menu)
 	end
 end
+
 
 return game

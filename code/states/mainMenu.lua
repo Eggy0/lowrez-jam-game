@@ -23,8 +23,10 @@ function mainMenu:keypressed(key, code)
     if key == 'return' and selectionX == 0 then
         Gamestate.switch(game)
     end
-	if key == 'right' and selectionX > -128 then
-        selectionX = selectionX-64
+	if key == 'right' then 
+		if selectionY == 0 and selectionX > -128 then
+			selectionX = selectionX-64
+		end
     end
 	if key == 'left' and selectionX < 0 then
         selectionX = selectionX+64
