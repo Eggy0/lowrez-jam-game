@@ -122,27 +122,34 @@ function game:draw()
 	love.graphics.draw(objectPolice.Sprite, math.round(objectPolice.x), math.round(objectPolice.y),0,1,1,20,22)
 	
 	objects.drawThruster()
-	for i=0,objectPlayerShip.Health-1 do
+  
+	--[[for i=0,objectPlayerShip.Health-1 do
 			love.graphics.draw(playerShipHealth,(i*8),(hudY+32)*-1)
-	end
+	end]]
 	
 	for i,v in ipairs(asteroidList) do
 		love.graphics.draw(v.Sprite, v.x,v.y,v.Rotation,1,1,4,4)
 
 	end
 	
-	--We just print variables as a test.
+
+		
+		
+		cam:pop() --Pop the cam before drawing the HUD
+    
+    --We just print variables as a test.
 		love.graphics.setFont(font)
 
-		love.graphics.print(shipScreenX,24,(hudY+32)*-1)
-		love.graphics.print(shipScreenY,24,(hudY+24)*-1)
+		love.graphics.print(shipScreenX,56,0)
+		love.graphics.print(shipScreenY,56,8)
 		--love.graphics.print(audio.loopStart,8,8)
 		--love.graphics.print(audio.position,8,16)
 		--love.graphics.print(audio.loopEnd,8,24)
 		--love.graphics.print("Collision: " .. collisionCheck,8,40)
-		
-		
-		cam:pop()
+    
+    for i=0,objectPlayerShip.Health-1 do
+      love.graphics.draw(playerShipHealth,(i*8),0)
+    end
     graphics.makeCanvas()
 	
 end
