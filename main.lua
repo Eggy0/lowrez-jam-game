@@ -5,7 +5,7 @@ Gamestate = require ("code/gamestate")
 anim8 = require ("code/anim8")
 flux = require("code/flux")
 local resolutionTest, resolutionTestAnimation
-local backgroundX, backgroundY, backgroundYTimer
+
 
 menu = require("code/states/test1")
 game = require("code/states/test2")
@@ -14,7 +14,7 @@ mainMenu = require("code/states/mainMenu")
 
 
 function love.load()
-    love.graphics.setDefaultFilter('nearest', 'nearest')
+  love.graphics.setDefaultFilter('nearest', 'nearest')
 	font = love.graphics.newFont(8) --Debug only	
 
 
@@ -28,6 +28,7 @@ function love.load()
 
 	canvas = love.graphics.newCanvas(canvas_width, canvas_height)
 	canvas:setFilter("nearest","nearest")
+
 	
 	graphics.loadGraphics()
 	Gamestate.registerEvents()

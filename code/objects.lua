@@ -106,9 +106,9 @@ end
 function objects.moveAsteroid(deltaDebris)
 	for i,v in ipairs(asteroidList) do
 		if v.Dir == "toLeft" then
-			v.x = v.x - v.Velocity*deltaDebris
+			v.x = v.x - v.VelocityX*deltaDebris
 		elseif v.Dir == "toRight" then
-			v.x = v.x + v.Velocity*deltaDebris
+			v.x = v.x + v.VelocityX*deltaDebris
 		end
 	end
 end

@@ -5,6 +5,7 @@ local blinkTimer = 0
 local Camera = require("code/camera")
 local worldY = 0
 
+
 function CheckCollision(x1,y1,w1,h1, x2,y2,w2,h2)
   return x1 < x2+w2 and
          x2 < x1+w1 and
@@ -17,6 +18,7 @@ function distanceFrom(x1,y1,x2,y2) return math.sqrt((x2 - x1) ^ 2 + (y2 - y1) ^ 
 
 
 function game:enter()
+
 	cam = Camera(64, 64, { x = -32, y = worldY})
   backgroundX = 0
 	backgroundY = worldY
@@ -46,11 +48,16 @@ function game:enter()
 end
 
 function game:update(dt)
-	
-	
+
 	distance = distanceFrom(objectPlayerShip.x,objectPlayerShip.y,objectPolice.x,objectPolice.y)
+  hudX, hudY = cam:getViewportPosition()
+  shipScreenX, shipScreenY = cam:getScreenCoordinates(objectPlayerShip.x, objectPlayerShip.y)
+
 	flux.update(dt)
-  flux.to(cam, 0.2, {y = (objectPlayerShip.y)*-1})
+  
+  --if shipScreenY > 
+    flux.to(cam, 30*dt, {y = objectPlayerShip.y*-1})
+ 
   cam:update()
 	objects.playerShipControls(dt)
 	objects.policeFollow(dt)
@@ -74,7 +81,7 @@ function game:update(dt)
 		backgroundY = backgroundY + 1
 		backgroundYTimer = 0
 	end
-	if backgroundY > 64 then --This makes it "tile" seamlessly
+	if backgroundY > objectPlayerShip.y + 64 then --This makes it "tile" seamlessly
 		backgroundY = backgroundY - 64
 	end
 
@@ -97,46 +104,53 @@ function game:update(dt)
 	end
 
 	audio.Update()
-  hudX, hudY = cam:getViewportPosition()
+
 end
 
 function game:draw()
 	cam:push()
 	gameBackgroundAnimation:draw(gameBackgroundTest,backgroundX,backgroundY)
 	gameBackgroundAnimation:draw(gameBackgroundTest,backgroundX,backgroundY-gameBackgroundTest:getHeight())
+  gameBackgroundAnimation:draw(gameBackgroundTest,backgroundX,backgroundY-(gameBackgroundTest:getHeight())*2)
 	
-	drawPlayerShip()
+		if objectPlayerShip.iframe >0 then
+	love.graphics.setColor( 1, 1, 1, blink)
+	end
+	love.graphics.draw(objectPlayerShip.Sprite, objectPlayerShip.x, objectPlayerShip.y,0,1,1,4,8)
+	love.graphics.setColor( 1, 1, 1, 1)
+  
 	love.graphics.draw(objectPolice.Sprite, math.round(objectPolice.x), math.round(objectPolice.y),0,1,1,20,22)
 	
 	objects.drawThruster()
 	for i=0,objectPlayerShip.Health-1 do
-			love.graphics.draw(playerShipHealth,0+(i*8),hudY)
+			love.graphics.draw(playerShipHealth,(i*8),(hudY+32)*-1)
 	end
 	
 	for i,v in ipairs(asteroidList) do
-		love.graphics.draw(v.Sprite, math.round(v.x),math.round(v.y),v.Rotation,1,1,4,4)
+		love.graphics.draw(v.Sprite, v.x,v.y,v.Rotation,1,1,4,4)
 
 	end
 	
 	--We just print variables as a test.
 		love.graphics.setFont(font)
 
-		love.graphics.print(distance,24,objectPlayerShip.y-32)
-		love.graphics.print(objectPolice.Velocity,24,objectPlayerShip.y+8-32)
+		love.graphics.print(shipScreenX,24,(hudY+32)*-1)
+		love.graphics.print(shipScreenY,24,(hudY+24)*-1)
 		--love.graphics.print(audio.loopStart,8,8)
 		--love.graphics.print(audio.position,8,16)
 		--love.graphics.print(audio.loopEnd,8,24)
 		--love.graphics.print("Collision: " .. collisionCheck,8,40)
 		
-		graphics.makeCanvas()
+		
 		cam:pop()
+    graphics.makeCanvas()
 	
 end
 
 
 function love.keypressed(key)
 	if key == "space" and Gamestate.current()==game then
-		objects.spawnAsteroid(asteroidRandomX[love.math.random(#asteroidRandomX)], love.math.random(0,56))
+		objects.spawnAsteroid(asteroidRandomX[love.math.random(#asteroidRandomX)], objectPlayerShip.y-love.math.random(0,48))
 	end
 	if key == "m" and audio.loadedTrack ~= nil then --Load alternate track
 		audio.loadedTrack:stop()
