@@ -8,7 +8,7 @@ local resolutionTest, resolutionTestAnimation
 
 
 menu = require("code/states/test1")
-game = require("code/states/test2")
+game = require("code/states/game")
 
 mainMenu = require("code/states/mainMenu")
 

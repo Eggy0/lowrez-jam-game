@@ -27,24 +27,51 @@ end
 
 
 function objects.playerShipControls(deltaShip)
-	if love.keyboard.isDown("up") then
-		objectPlayerShip.y = objectPlayerShip.y - objectPlayerShip.Velocity*deltaShip
-		objectPlayerShip.Thruster = true
-	elseif love.keyboard.isDown("down") then
-		objectPlayerShip.y = objectPlayerShip.y + objectPlayerShip.Velocity*deltaShip
-		objectPlayerShip.Thruster = false
-	elseif love.keyboard.isDown("left") then
-		objectPlayerShip.x = objectPlayerShip.x - objectPlayerShip.Velocity*deltaShip
-		objectPlayerShip.Thruster = false
-	elseif love.keyboard.isDown("right") then
-		objectPlayerShip.x = objectPlayerShip.x + objectPlayerShip.Velocity*deltaShip
-		objectPlayerShip.Thruster = false
-	
-	else
-		objectPlayerShip.x = math.round(objectPlayerShip.x)
-		objectPlayerShip.y = math.round(objectPlayerShip.y)
-		objectPlayerShip.Thruster = false
-	end
+    local direction = {0, 0} -- Create a table with two elements for x and y respectively.
+    local isMoving = false
+    
+    objectPlayerShip.Thruster = false
+    
+    
+    if love.keyboard.isDown("up") then
+        direction[2] = direction[2] - 1 -- Subtract 1 from y
+        objectPlayerShip.Thruster = true
+        isMoving = true
+    end
+    if love.keyboard.isDown("down") then
+        direction[2] = direction[2] + 1 -- Add 1 to y
+        isMoving = true
+    end
+    if love.keyboard.isDown("left") then
+        direction[1] = direction[1] - 1 -- Subtract 1 from x
+        isMoving = true
+    end
+    if love.keyboard.isDown("right") then
+        direction[1] = direction[1] + 1 -- Add 1 to x
+        isMoving = true
+    end
+
+    if not isMoving then
+        -- Snap to the nearest pixel if we are not moving
+        objectPlayerShip.x = math.round(objectPlayerShip.x)
+        objectPlayerShip.y = math.round(objectPlayerShip.y)
+    else
+        -- But if we are moving, then move in the vector represented by direction
+        -- now the thing is, for diagonal movement, we'll actually be moving at about 1.414x speed, so we need to divide the movement by the magnitude of the vector
+        -- This ensures that the length of this vector is always 1, so when we multiply by our velocity, our speed is (1 * velocity) in that direction (as opposed to 1.414 * velocity)
+        -- The 1.414 comes from the fact that our direction needs to be a point on the unit circle.
+        -- If we just leave both axes as 1, then that's a point on a *square*, not a circle.
+        -- The distance to the corner of a square is longer than the distance to the middle of a square's side.
+        -- And, to be precise, the distance is sqrt(2) times the normal distance (1.414x)
+        local magnitude = math.sqrt(direction[1]^2 + direction[2]^2)
+        if magnitude == 0 then return end
+        local velocity = objectPlayerShip.Velocity
+        direction[1] = direction[1] / magnitude * velocity
+        direction[2] = direction[2] / magnitude * velocity
+        
+        objectPlayerShip.x = objectPlayerShip.x + direction[1] * deltaShip
+        objectPlayerShip.y = objectPlayerShip.y + direction[2] * deltaShip
+    end
 
 end
 

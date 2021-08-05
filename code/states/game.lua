@@ -15,11 +15,15 @@ end
 
 function distanceFrom(x1,y1,x2,y2) return math.sqrt((x2 - x1) ^ 2 + (y2 - y1) ^ 2) end
 
-
+	cam = Camera(64, 64, { x = -32, y = worldY})
+  mainLayer = cam:addLayer('mainLayer', 1)
+  parallax = cam:addLayer('parallax',1, { relativeScale = .1 })
+  
 
 function game:enter()
 
-	cam = Camera(64, 64, { x = -32, y = worldY})
+
+  
   backgroundX = 0
 	backgroundY = worldY
 	backgroundYTimer = 0
@@ -81,7 +85,7 @@ function game:update(dt)
 		backgroundY = backgroundY + 1
 		backgroundYTimer = 0
 	end
-	if backgroundY > objectPlayerShip.y + 64 then --This makes it "tile" seamlessly
+	if backgroundY > --[[objectPlayerShip.y + ]]64 then --This makes it "tile" seamlessly
 		backgroundY = backgroundY - 64
 	end
 
@@ -108,10 +112,17 @@ function game:update(dt)
 end
 
 function game:draw()
+	
 	cam:push()
-	gameBackgroundAnimation:draw(gameBackgroundTest,backgroundX,backgroundY)
-	gameBackgroundAnimation:draw(gameBackgroundTest,backgroundX,backgroundY-gameBackgroundTest:getHeight())
-  gameBackgroundAnimation:draw(gameBackgroundTest,backgroundX,backgroundY-(gameBackgroundTest:getHeight())*2)
+    cam:push('parallax')
+
+      gameBackgroundAnimation:draw(gameBackgroundTest,backgroundX,backgroundY)
+      gameBackgroundAnimation:draw(gameBackgroundTest,backgroundX,backgroundY-gameBackgroundTest:getHeight())
+      gameBackgroundAnimation:draw(gameBackgroundTest,backgroundX,backgroundY-(gameBackgroundTest:getHeight())*2)
+    cam:pop('parallax')
+  
+  cam:push('mainLayer')
+  
 	
 		if objectPlayerShip.iframe >0 then
 	love.graphics.setColor( 1, 1, 1, blink)
@@ -135,13 +146,14 @@ function game:draw()
 
 		
 		
-		cam:pop() --Pop the cam before drawing the HUD
+		cam:pop('mainLayer') 
+    cam:pop()--Pop the cam before drawing the HUD
     
     --We just print variables as a test.
 		love.graphics.setFont(font)
 
-		love.graphics.print(shipScreenX,56,0)
-		love.graphics.print(shipScreenY,56,8)
+		love.graphics.print(shipScreenX,48,0)
+		love.graphics.print(shipScreenY,48,8)
 		--love.graphics.print(audio.loopStart,8,8)
 		--love.graphics.print(audio.position,8,16)
 		--love.graphics.print(audio.loopEnd,8,24)
