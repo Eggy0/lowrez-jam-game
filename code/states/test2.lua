@@ -16,6 +16,7 @@ function distanceFrom(x1,y1,x2,y2) return math.sqrt((x2 - x1) ^ 2 + (y2 - y1) ^ 
 
 
 function game:enter()
+	cam = Camera(64, 64, { x = -32, y = -32})
     backgroundX = 0
 	backgroundY = 0
 	backgroundYTimer = 0
@@ -33,7 +34,7 @@ function game:enter()
 
 	objects.spawnPlayerShip(31,64)
 	objects.spawnPolice(31,128)
-		gameCamera = Camera.new(objectPlayerShip.x,objectPlayerShip.y)
+
 	
 	if audio.loadedTrack ~= nil then
 		audio.loadedTrack:stop() --Stop the track if it's already playing
@@ -44,8 +45,8 @@ function game:enter()
 end
 
 function game:update(dt)
-	gameCamera:lockY(objectPlayerShip.y)
-	--gameCamera:move(objectPlayerShip.x*dt,objectPlayerShip.y*dt)
+	cam.y = math.round(objectPlayerShip.y*-0.70)
+	cam:update()
 	distance = distanceFrom(objectPlayerShip.x,objectPlayerShip.y,objectPolice.x,objectPolice.y)
 	flux.update(dt)
 	objects.playerShipControls(dt)
@@ -96,7 +97,7 @@ function game:update(dt)
 end
 
 function game:draw()
-	gameCamera:attach()
+	cam:push()
 	gameBackgroundAnimation:draw(gameBackgroundTest,backgroundX,backgroundY)
 	gameBackgroundAnimation:draw(gameBackgroundTest,backgroundX,backgroundY-gameBackgroundTest:getHeight())
 	
@@ -124,7 +125,8 @@ function game:draw()
 		--love.graphics.print("Collision: " .. collisionCheck,8,40)
 		
 		graphics.makeCanvas()
-	gameCamera:detach()
+		cam:pop()
+	
 end
 
 

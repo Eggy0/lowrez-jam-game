@@ -6,8 +6,8 @@ function love.conf(t)
     t.version = "11.3"                  -- The LÖVE version this game was made for (string)
     t.console = false                   -- Attach a console (boolean, Windows only)
     
-    t.window.width = 600               -- The window width (number)
-    t.window.height = 600
+    t.window.width = 200               -- The window width (number)
+    t.window.height = 200
 	-- The window height (number)
     t.window.resizable = true          -- Let the window be user-resizable (boolean)
     t.window.fullscreen = false         -- Enable fullscreen (boolean)

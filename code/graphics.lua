@@ -1,7 +1,7 @@
 local graphics = {}
 
-local canvas_width = 600
-local canvas_height = 600
+local canvas_width = 64
+local canvas_height = 64
 
 
 function graphics.loadGraphics()
