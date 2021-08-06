@@ -2,8 +2,10 @@ local game = {}
 local collisionCheck = "No"
 local blink = 1
 local blinkTimer = 0
-local Camera = require("code/camera")
 local worldY = 0
+local distanceMeter asteroidTimerCount = 0
+local asteroidTimer = love.math.random(0.2,3)
+
 
 
 function CheckCollision(x1,y1,w1,h1, x2,y2,w2,h2)
@@ -15,9 +17,9 @@ end
 
 function distanceFrom(x1,y1,x2,y2) return math.sqrt((x2 - x1) ^ 2 + (y2 - y1) ^ 2) end
 
-	cam = Camera(64, 64, { x = -32, y = worldY})
+	cam = Camera(64, 64, { x = -32, y = worldY, offsetY = 40})
   mainLayer = cam:addLayer('mainLayer', 1)
-  parallax = cam:addLayer('parallax',1, { relativeScale = .1 })
+  parallax = cam:addLayer('parallax',1, { relativeScale = 0.5 })
   
 
 function game:enter()
@@ -28,10 +30,7 @@ function game:enter()
 	backgroundY = worldY
 	backgroundYTimer = 0
 	
-	gameBackgroundTest = love.graphics.newImage("graphics/gameplay_background_test.png")
 	
-	local gameBackgroundGrid = anim8.newGrid(64,64,gameBackgroundTest:getWidth(), gameBackgroundTest:getHeight())
-	gameBackgroundAnimation = anim8.newAnimation(gameBackgroundGrid('1-7',1),0.1)
 	
 
 	canvas:setFilter("nearest","nearest")
@@ -60,12 +59,17 @@ function game:update(dt)
 	flux.update(dt)
   
   --if shipScreenY > 
-    flux.to(cam, 30*dt, {y = objectPlayerShip.y*-1})
+  flux.to(cam, 30*dt, {y = objectPlayerShip.y*-1})
  
-  cam:update()
+  asteroidTimerCount = asteroidTimerCount + 1*dt
+  if asteroidTimerCount >= asteroidTimer then
+     objects.spawnAsteroid(asteroidRandomX[love.math.random(#asteroidRandomX)], objectPlayerShip.y-love.math.random(4,32),love.math.random(20,50))
+     asteroidTimerCount = 0
+     asteroidTimer = love.math.random(0.2,3) 
+  end    
 	objects.playerShipControls(dt)
 	objects.policeFollow(dt)
-	objectPolice.Velocity = objectPolice.Velocity + 0.2*dt
+	--objectPolice.Velocity = objectPolice.Velocity + 0.2*dt
 	blinkTimer = blinkTimer + 1*dt
 	if blinkTimer >= 0.05 then
 		blink = blink *-1
@@ -79,13 +83,14 @@ function game:update(dt)
 		objectPlayerShip.iframe = objectPlayerShip.iframe - 1*dt
 	end
 	
+  playerShipExplosionAnimation:update(dt)
 	gameBackgroundAnimation:update(dt)
 	backgroundYTimer = backgroundYTimer + 1*dt
 	if backgroundYTimer >= 0.1 then
 		backgroundY = backgroundY + 1
 		backgroundYTimer = 0
 	end
-	if backgroundY > --[[objectPlayerShip.y + ]]64 then --This makes it "tile" seamlessly
+	if backgroundY > objectPlayerShip.y + 64 then --This makes it "tile" seamlessly
 		backgroundY = backgroundY - 64
 	end
 
@@ -101,13 +106,20 @@ function game:update(dt)
 			collisionCheck = "No"
 		end
 
-		if v.x >= 70 or v.x <= -10 or v.y >= 70 then --Asteroid removal code
+		if v.x >= 70 or v.x <= -10 or v.y >= objectPlayerShip.y + 70 then --Asteroid removal code
 			table.remove(asteroidList,i)
 		end
 		
 	end
 
 	audio.Update()
+  cam:update()
+  distanceMeter = -2+distance/2
+    if distanceMeter < 24 then
+      distanceMeter = 24
+    elseif distanceMeter > 60 then
+      distanceMeter = 60
+    end
 
 end
 
@@ -116,9 +128,9 @@ function game:draw()
 	cam:push()
     cam:push('parallax')
 
-      gameBackgroundAnimation:draw(gameBackgroundTest,backgroundX,backgroundY)
-      gameBackgroundAnimation:draw(gameBackgroundTest,backgroundX,backgroundY-gameBackgroundTest:getHeight())
-      gameBackgroundAnimation:draw(gameBackgroundTest,backgroundX,backgroundY-(gameBackgroundTest:getHeight())*2)
+      for i=0,2 do
+      gameBackgroundAnimation:draw(gameBackgroundTest,backgroundX,backgroundY-(gameBackgroundTest:getHeight())*i)
+      end
     cam:pop('parallax')
   
   cam:push('mainLayer')
@@ -126,17 +138,21 @@ function game:draw()
 	
 		if objectPlayerShip.iframe >0 then
 	love.graphics.setColor( 1, 1, 1, blink)
-	end
+end
+if objectPlayerShip.isDead == false then
 	love.graphics.draw(objectPlayerShip.Sprite, objectPlayerShip.x, objectPlayerShip.y,0,1,1,4,8)
+end
 	love.graphics.setColor( 1, 1, 1, 1)
   
 	love.graphics.draw(objectPolice.Sprite, math.round(objectPolice.x), math.round(objectPolice.y),0,1,1,20,22)
 	
-	objects.drawThruster()
+if objectPlayerShip.isDead == false then
+    objects.drawThruster()
+  end
+if objectPlayerShip.isDead == true then
+  playerShipExplosionAnimation:draw(playerShipExplosion,objectPlayerShip.x-4,objectPlayerShip.y-8)
+end
   
-	--[[for i=0,objectPlayerShip.Health-1 do
-			love.graphics.draw(playerShipHealth,(i*8),(hudY+32)*-1)
-	end]]
 	
 	for i,v in ipairs(asteroidList) do
 		love.graphics.draw(v.Sprite, v.x,v.y,v.Rotation,1,1,4,4)
@@ -149,11 +165,11 @@ function game:draw()
 		cam:pop('mainLayer') 
     cam:pop()--Pop the cam before drawing the HUD
     
-    --We just print variables as a test.
-		love.graphics.setFont(font)
+   
+		love.graphics.setFont(scoreFont)
 
-		love.graphics.print(shipScreenX,48,0)
-		love.graphics.print(shipScreenY,48,8)
+		love.graphics.print(string.format("%06d",objectPlayerShip.Score),28,1)
+		--love.graphics.print(objectPolice.Velocity,32,8)
 		--love.graphics.print(audio.loopStart,8,8)
 		--love.graphics.print(audio.position,8,16)
 		--love.graphics.print(audio.loopEnd,8,24)
@@ -162,10 +178,19 @@ function game:draw()
     for i=0,objectPlayerShip.Health-1 do
       love.graphics.draw(playerShipHealth,(i*8),0)
     end
+    love.graphics.draw(playerIcon,0,8)
+    love.graphics.draw(policeIcon,0,distanceMeter-2,0,1,1,0,7)
+    love.graphics.setLineWidth(1)
+    love.graphics.setLineStyle("rough")
+    if distanceMeter-10 > 15 then
+      love.graphics.line( 4, 15, 4, distanceMeter-10)
+    end
     graphics.makeCanvas()
 	
 end
 
+
+--The commands below are for debug.
 
 function love.keypressed(key)
 	if key == "space" and Gamestate.current()==game then
@@ -181,6 +206,9 @@ function love.keypressed(key)
 	end
 	if key == "b" then --Switch back to the other state
 		Gamestate.switch(menu)
+	end
+  	if key == "g" then --Make the player die
+		objectPlayerShip.Health = 0
 	end
 end
 

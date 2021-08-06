@@ -4,6 +4,7 @@ objects = require("code/objects")
 Gamestate = require ("code/gamestate")
 anim8 = require ("code/anim8")
 flux = require("code/flux")
+Camera = require("code/camera")
 local resolutionTest, resolutionTestAnimation
 
 
@@ -15,7 +16,7 @@ mainMenu = require("code/states/mainMenu")
 
 function love.load()
   love.graphics.setDefaultFilter('nearest', 'nearest')
-	font = love.graphics.newFont(8) --Debug only	
+	scoreFont = love.graphics.newImageFont('graphics/gameplayFont.png', '0123456789',1)
 
 
 
