@@ -105,6 +105,9 @@ end
 
 function objects.policeFollow(deltaPolice)
 		flux.to(objectPolice, 20*deltaPolice*distance/objectPolice.Velocity, {x = objectPlayerShip.x, y = objectPlayerShip.y + 24}):ease("linear"):delay(10*deltaPolice)
+    if objectPlayerShip.isDead == true then
+          flux.to(objectPolice, 5, {x = objectPlayerShip.x, y = objectPlayerShip.y + 128}):ease("linear"):delay(50*deltaPolice)
+    end
         
 end
 

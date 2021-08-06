@@ -14,6 +14,21 @@ function CheckCollision(x1,y1,w1,h1, x2,y2,w2,h2)
          y1 < y2+h2 and
          y2 < y1+h1
 end
+function circleRectangleIntersect(cx, cy, cr, rx, ry, rw, rh)
+	local circle_distance_x = math.abs(cx - rx - rw/2)
+	local circle_distance_y = math.abs(cy - ry - rh/2)
+
+	if circle_distance_x > (rw/2 + cr) then return false end
+	if circle_distance_y > (rh/2 + cr) then return false end
+
+	if circle_distance_x <= (rw/2) then return true end
+	if circle_distance_y <= (rh/2) then return true end
+
+	local corner_distance_sq = math.pow(circle_distance_x - rw/2, 2) +
+						 math.pow(circle_distance_y - rh/2, 2)
+
+	return corner_distance_sq <= math.pow(cr, 2)
+end
 
 function distanceFrom(x1,y1,x2,y2) return math.sqrt((x2 - x1) ^ 2 + (y2 - y1) ^ 2) end
 
@@ -96,7 +111,7 @@ function game:update(dt)
 
 	
 	for i,v in ipairs(asteroidList) do
-		if CheckCollision(objectPlayerShip.x,objectPlayerShip.y-6,11,11, v.x+3,v.y+3,3,3) then
+		if circleRectangleIntersect(v.x+5,v.y+4, 1,objectPlayerShip.x,objectPlayerShip.y-6,11,11) then         --CheckCollision(objectPlayerShip.x,objectPlayerShip.y-6,11,11, v.x+3,v.y+3,3,3) then
 			collisionCheck = "Yes"
 			if objectPlayerShip.iframe <= 0 then
 				objectPlayerShip.Health= objectPlayerShip.Health - 1
@@ -144,7 +159,7 @@ if objectPlayerShip.isDead == false then
 end
 	love.graphics.setColor( 1, 1, 1, 1)
   
-	love.graphics.draw(objectPolice.Sprite, math.round(objectPolice.x), math.round(objectPolice.y),0,1,1,20,22)
+	love.graphics.draw(objectPolice.Sprite, math.floor(objectPolice.x), math.floor(objectPolice.y),0,1,1,20,22)
 	
 if objectPlayerShip.isDead == false then
     objects.drawThruster()
@@ -167,23 +182,24 @@ end
     
    
 		love.graphics.setFont(scoreFont)
-
-		love.graphics.print(string.format("%06d",objectPlayerShip.Score),28,1)
-		--love.graphics.print(objectPolice.Velocity,32,8)
-		--love.graphics.print(audio.loopStart,8,8)
-		--love.graphics.print(audio.position,8,16)
-		--love.graphics.print(audio.loopEnd,8,24)
-		--love.graphics.print("Collision: " .. collisionCheck,8,40)
-    
-    for i=0,objectPlayerShip.Health-1 do
-      love.graphics.draw(playerShipHealth,(i*8),0)
-    end
-    love.graphics.draw(playerIcon,0,8)
-    love.graphics.draw(policeIcon,0,distanceMeter-2,0,1,1,0,7)
-    love.graphics.setLineWidth(1)
-    love.graphics.setLineStyle("rough")
-    if distanceMeter-10 > 15 then
-      love.graphics.line( 4, 15, 4, distanceMeter-10)
+    if objectPlayerShip.isDead == false then
+      love.graphics.print(string.format("%06d",objectPlayerShip.Score),28,1)
+      --love.graphics.print(objectPolice.Velocity,32,8)
+      --love.graphics.print(audio.loopStart,8,8)
+      --love.graphics.print(audio.position,8,16)
+      --love.graphics.print(audio.loopEnd,8,24)
+      --love.graphics.print("Collision: " .. collisionCheck,8,40)
+      
+      for i=0,objectPlayerShip.Health-1 do
+        love.graphics.draw(playerShipHealth,(i*8),0)
+      end
+      love.graphics.draw(playerIcon,0,8)
+      love.graphics.draw(policeIcon,0,distanceMeter-2,0,1,1,0,7)
+      love.graphics.setLineWidth(1)
+      love.graphics.setLineStyle("rough")
+      if distanceMeter-10 > 15 then
+        love.graphics.line( 4, 15, 4, distanceMeter-10)
+      end
     end
     graphics.makeCanvas()
 	
