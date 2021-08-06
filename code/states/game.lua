@@ -5,6 +5,7 @@ local blinkTimer = 0
 local worldY = 0
 local distanceMeter asteroidTimerCount = 0
 local asteroidTimer = love.math.random(0.2,3)
+local camDelay = 30
 
 
 
@@ -38,7 +39,7 @@ function distanceFrom(x1,y1,x2,y2) return math.sqrt((x2 - x1) ^ 2 + (y2 - y1) ^ 
   
 
 function game:enter()
-
+ 
 
   
   backgroundX = 0
@@ -73,9 +74,11 @@ function game:update(dt)
 
 	flux.update(dt)
   
-  --if shipScreenY > 
-  flux.to(cam, 30*dt, {y = objectPlayerShip.y*-1})
- 
+  flux.to(cam, camDelay*dt, {y = objectPlayerShip.y*-1})
+  if camDelay ~= 30 then
+    camDelay = 30
+  end
+
   asteroidTimerCount = asteroidTimerCount + 1*dt
   if asteroidTimerCount >= asteroidTimer then
      objects.spawnAsteroid(asteroidRandomX[love.math.random(#asteroidRandomX)], objectPlayerShip.y-love.math.random(4,32),love.math.random(20,50))
@@ -135,7 +138,10 @@ function game:update(dt)
     elseif distanceMeter > 60 then
       distanceMeter = 60
     end
-
+  if -objectPlayerShip.y>objectPlayerShip.Score then
+      objectPlayerShip.Score = -(objectPlayerShip.y/10)
+  end
+      
 end
 
 function game:draw()
@@ -223,8 +229,13 @@ function love.keypressed(key)
 	if key == "b" then --Switch back to the other state
 		Gamestate.switch(menu)
 	end
-  	if key == "g" then --Make the player die
+  if key == "g" then --Make the player die
 		objectPlayerShip.Health = 0
+	end
+  if key == "r" then --Reset the state
+    camDelay = 0
+		Gamestate.switch(game)
+    
 	end
 end
 
