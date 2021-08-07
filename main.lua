@@ -9,19 +9,18 @@ local resolutionTest, resolutionTestAnimation
 
 
 menu = require("code/states/test1")
-game = require("code/states/game")
+test = require("code/states/testFont")
 
 mainMenu = require("code/states/mainMenu")
+game = require("code/states/game")
 
-local originalSetMT = setmetatable
-setmetatable = function (tbl, meta)
-    originalSetMT(tbl, meta)
-    return tbl
-end
+
+
 
 function love.load()
   love.graphics.setDefaultFilter('nearest', 'nearest')
 	scoreFont = love.graphics.newImageFont('graphics/gameplayFont.png', '0123456789',1)
+  defaultFont = love.graphics.newImageFont('graphics/defaultFont.png',' ?!.,-ABCDEFGHIJKLMNOPQRSTUVWXYZ',-1)
 
 
 

@@ -1,5 +1,5 @@
 local objects = {}
-
+local bulletTimerCount = 0
 
 
 --playerShip object
@@ -79,7 +79,8 @@ function objects.playerShipControls(deltaShip)
           objectPlayerShip.y = objectPlayerShip.y + direction[2] * deltaShip
       end
       if objectPlayerShip.Health <= 0 then
-        objectPlayerShip.isDead = true
+          objectPlayerShip.isDead = true
+          
       end
     end
 
@@ -93,6 +94,7 @@ function objects.drawThruster()
 end
 
 ---police ship
+onPlayerDeathX = {-96,96}
 
 function objects.spawnPolice(policeX, policeY) --The police ship will always follow the player ship's x.
 	objectPolice = {}
@@ -102,18 +104,58 @@ function objects.spawnPolice(policeX, policeY) --The police ship will always fol
 	objectPolice.Velocity = 5
 	objectPolice.x = policeX
 	objectPolice.y = policeY
-	objectPlayerShip.Thruster = false
+  objectPolice.BulletTimer = 0.35
+  objectPolice.onPlayerDeathX = onPlayerDeathX[love.math.random(#onPlayerDeathX)]
+  
+  
 end
 
 function objects.policeFollow(deltaPolice)
-		flux.to(objectPolice, 20*deltaPolice*distance/objectPolice.Velocity, {x = objectPlayerShip.x, y = objectPlayerShip.y + 24}):ease("linear"):delay(10*deltaPolice)
-    if objectPlayerShip.isDead == true then
-          flux.to(objectPolice, 5, {x = objectPlayerShip.x, y = objectPlayerShip.y + 128}):ease("linear"):delay(50*deltaPolice)
+    if objectPlayerShip.isDead == false then
+      flux.to(objectPolice, 20*deltaPolice*distance/objectPolice.Velocity, {x = objectPlayerShip.x, y = objectPlayerShip.y + 24}):ease("linear"):delay(10*deltaPolice)
+    elseif objectPlayerShip.isDead == true then
+      flux.to(objectPolice, 5, {x = objectPolice.onPlayerDeathX, y = objectPlayerShip.y + 96}):ease("linear"):delay(50*deltaPolice)
     end
-        
+    if distance <= 48 and objectPlayerShip.isDead == false and (objectPolice.x >= objectPlayerShip.x - 4 or objectPolice.x <= objectPlayerShip.x + 4) then --Produce bullets when in range
+        bulletTimerCount = bulletTimerCount + 1*deltaPolice
+        if bulletTimerCount >= objectPolice.BulletTimer then
+          objects.spawnBullet(objectPolice.x-4, objectPolice.y-20)
+          objects.spawnBullet(objectPolice.x+3, objectPolice.y-20)
+          bulletTimerCount = 0
+        end
+    end
+    
+    if CheckCollision(objectPlayerShip.x-1,objectPlayerShip.y,4,2, objectPolice.x-3,objectPolice.y-18,7,19) or CheckCollision(objectPlayerShip.x-1,objectPlayerShip.y,4,2, objectPolice.x-16,objectPolice.y-10,34,10) then
+        objectPlayerShip.Health = 0
+    end 
+  
 end
 
-        
+bulletList = {}
+
+function objects.spawnBullet(bulletX, bulletY)
+  objectBullet = {}
+  objectBullet.width = 1
+  objectBullet.length = 3
+  objectBullet.x = bulletX
+  objectBullet.y = bulletY
+  objectBullet.Velocity = objectPlayerShip.Velocity + 50
+  table.insert(bulletList,objectBullet)
+end
+
+function objects.moveBullet(deltaBullet)
+  for i,v in ipairs(bulletList) do
+    v.y = v.y - v.Velocity*deltaBullet
+    if CheckCollision(v.x,v.y,v.width,v.length,objectPlayerShip.x-1,objectPlayerShip.y,4,2) and objectPlayerShip.isDead == false then
+      objectPlayerShip.Health = 0
+      table.remove(bulletList,i)
+    end
+    if v.y < objectPlayerShip.y - 70 then
+      table.remove(bulletList,i)
+      end
+  end
+  
+end
 
 
 
@@ -141,6 +183,9 @@ function objects.spawnAsteroid(asteroidX, asteroidY,asteroidVelocityX)
 	objectAsteroid.Rotation = love.math.random(0,10)
 	objectAsteroid.VelocityX = asteroidVelocityX or love.math.random(15,40)
 	objectAsteroid.VelocityY = 0
+  objectAsteroid.offsetX = 5
+  objectAsteroid.offsetY = 4
+  objectAsteroid.radius = 1
 	table.insert(asteroidList,objectAsteroid)
 end
 
@@ -165,12 +210,30 @@ function objects.rotateAsteroid(deltaDebris)
 end
 
 --Medium asteroid object
-objectMedAsteroid = setmetatable({},{ __index = objectAsteroid })
+
 
 function objects.spawnMedAsteroid(asteroidX, asteroidY,asteroidVelocityX)
   objectMedAsteroid = {}
   
-  table.insert(asteroidList,objectMedAsteroid)
+	objectMedAsteroid.Sprite = asteroidGraphics[love.math.random(#asteroidGraphics)]
+	objectMedAsteroid.x = asteroidX
+	objectMedAsteroid.y = asteroidY
+	
+	if 	objectMedAsteroid.x < 32 then
+			objectMedAsteroid.Dir = asteroidDirList[2]
+	else
+			objectMedAsteroid.Dir = asteroidDirList[1]
+	end
+	
+  objectMedAsteroid.SpinDir = asteroidSpinningDir[love.math.random(#asteroidSpinningDir)]
+  objectMedAsteroid.SpinVel = love.math.random(0,10)
+	objectMedAsteroid.Rotation = love.math.random(0,10)
+	objectMedAsteroid.VelocityX = asteroidVelocityX or love.math.random(15,40)
+	objectMedAsteroid.VelocityY = 0
+  objectMedAsteroid.offsetX = 5
+  objectMedAsteroid.offsetY = 4
+  objectMedAsteroid.radius = 1
+	table.insert(asteroidList,objectMedAsteroid)
 
 end
 

@@ -6,6 +6,7 @@ local worldY = 0
 local distanceMeter asteroidTimerCount = 0
 local asteroidTimer = love.math.random(0.2,3)
 local camDelay = 30
+local isPaused = false
 
 
 
@@ -35,28 +36,18 @@ end
 function distanceFrom(x1,y1,x2,y2) return math.sqrt((x2 - x1) ^ 2 + (y2 - y1) ^ 2) end
 
 	cam = Camera(64, 64, { x = -32, y = worldY, offsetY = 40})
-  mainLayer = cam:addLayer('mainLayer', 1)
-  parallax = cam:addLayer('parallax',1, { relativeScale = 0.5 })
   
 
 function game:enter()
- 
 
-  
   backgroundX = 0
 	backgroundY = worldY
 	backgroundYTimer = 0
-	
-	
-	
 
 	canvas:setFilter("nearest","nearest")
 	
-
-
-
 	objects.spawnPlayerShip(31,worldY)
-	objects.spawnPolice(31,100)
+	objects.spawnPolice(31,worldY+100)
   policeFollowFlag = false
 
 	
@@ -68,11 +59,12 @@ function game:enter()
 
 end
 
-function game:update(dt)
 
-	distance = distanceFrom(objectPlayerShip.x,objectPlayerShip.y,objectPolice.x,objectPolice.y)
-  hudX, hudY = cam:getViewportPosition()
-  shipScreenX, shipScreenY = cam:getScreenCoordinates(objectPlayerShip.x, objectPlayerShip.y)
+function gameUpdate(dt) --Need this to be able to pause the game
+  
+  
+  distance = distanceFrom(objectPlayerShip.x,objectPlayerShip.y,objectPolice.x,objectPolice.y)
+  shipScreenX, shipScreenY = cam:getScreenCoordinates(objectPolice.x, objectPolice.y)
 
 	flux.update(dt)
   
@@ -80,16 +72,18 @@ function game:update(dt)
   if camDelay ~= 30 then
     camDelay = 30
   end
-
-  asteroidTimerCount = asteroidTimerCount + 1*dt
-  if asteroidTimerCount >= asteroidTimer then
-     objects.spawnAsteroid(asteroidRandomX[love.math.random(#asteroidRandomX)], objectPlayerShip.y-love.math.random(4,32),love.math.random(20,50))
-     asteroidTimerCount = 0
-     asteroidTimer = love.math.random(0.2,3) 
-  end    
+  if objectPlayerShip.isDead == false then
+    asteroidTimerCount = asteroidTimerCount + 1*dt
+    if asteroidTimerCount >= asteroidTimer then
+       objects.spawnAsteroid(asteroidRandomX[love.math.random(#asteroidRandomX)], objectPlayerShip.y-love.math.random(4,32),love.math.random(20,50))
+       asteroidTimerCount = 0
+       asteroidTimer = love.math.random(0.2,3) 
+    end    
+  end
+  
 	objects.playerShipControls(dt)
 	if  policeFollowFlag == true then
-    objects.policeFollow(dt)
+  objects.policeFollow(dt)
   end
   policeFollowFlag = true --There was a bug where the police ship would sometimes instantly catch up with the player on spawn despite being created far beneath.
 	objectPolice.Velocity = objectPolice.Velocity + 0.2*dt
@@ -101,6 +95,7 @@ function game:update(dt)
     
 	objects.moveAsteroid(dt)
 	objects.rotateAsteroid(dt)
+  objects.moveBullet(dt)
 	
 	if objectPlayerShip.iframe > 0 then
 		objectPlayerShip.iframe = objectPlayerShip.iframe - 1*dt
@@ -120,15 +115,18 @@ function game:update(dt)
 	end
 	if backgroundY > objectPlayerShip.y + 64 then --This makes it "tile" seamlessly
 		backgroundY = backgroundY - 64
+  elseif backgroundY < objectPlayerShip.y - 64 then --Just in case the player goes backwards
+		backgroundY = backgroundY + 64
 	end
 
 	
 	for i,v in ipairs(asteroidList) do
-		if circleRectangleIntersect(v.x+5,v.y+4, 1,objectPlayerShip.x,objectPlayerShip.y-6,11,11) then
+		if circleRectangleIntersect(v.x+v.offsetX,v.y+v.offsetY, v.radius,objectPlayerShip.x,objectPlayerShip.y-6,11,11) and objectPlayerShip.isDead == false then
 
 			if objectPlayerShip.iframe <= 0 then
 				objectPlayerShip.Health= objectPlayerShip.Health - 1
 				objectPlayerShip.iframe = 5
+        table.remove(asteroidList,i)
 			end
 		else
 
@@ -140,7 +138,7 @@ function game:update(dt)
 		
 	end
 
-	audio.Update()
+	
   cam:update()
   distanceMeter = -2+distance/2
     if distanceMeter < 24 then
@@ -151,21 +149,30 @@ function game:update(dt)
   if -(objectPlayerShip.y/10)>objectPlayerShip.Score then
       objectPlayerShip.Score = -(objectPlayerShip.y/10)
   end
-      
+     
+end  
+
+function game:update(dt)
+  if isPaused == false then
+    gameUpdate(dt)
+  end
+  audio.Update() --This is outside the pause function because the music needs to loop
+
 end
+
 
 function game:draw()
 	
 	cam:push()
-    cam:push('parallax')
+    --Debug test some hitboxes
 
-      for i=0,2 do
+    
+    for i=-1,2 do
       gameBackgroundAnimation:draw(gameBackgroundTest,backgroundX,backgroundY-(gameBackgroundTest:getHeight())*i)
-      end
-    cam:pop('parallax')
-  
-  cam:push('mainLayer')
-  
+    end
+    love.graphics.setColor( 1, 0, 0, 1)
+   
+    love.graphics.setColor( 1, 1, 1, 1)
 	
 		if objectPlayerShip.iframe >0 then
       love.graphics.setColor( 1, 1, 1, blink)
@@ -185,6 +192,11 @@ function game:draw()
 	
     for i,v in ipairs(asteroidList) do
       love.graphics.draw(v.Sprite, v.x,v.y,v.Rotation,1,1,4,4)
+    end
+    
+    for i,v in ipairs(bulletList) do
+      love.graphics.setColor( 1, 1, 1, 1)
+      love.graphics.rectangle("fill", v.x,v.y,v.width,v.length)
 
     end
 	
@@ -193,13 +205,13 @@ function game:draw()
     end
 		
 		
-		cam:pop('mainLayer') 
     cam:pop()--Pop the cam before drawing the HUD
     
    
-		love.graphics.setFont(scoreFont)
+		love.graphics.setFont(scoreFont) 
+    love.graphics.print(string.format("%06d",objectPlayerShip.Score),28,1)
     if objectPlayerShip.isDead == false then
-      love.graphics.print(string.format("%06d",objectPlayerShip.Score),28,1)
+    
       --love.graphics.print(objectPolice.Velocity,32,8)
       --love.graphics.print(audio.loopStart,8,8)
       --love.graphics.print(audio.position,8,16)
@@ -217,6 +229,22 @@ function game:draw()
         love.graphics.line( 4, 15, 4, distanceMeter-10)
       end
     end
+    if isPaused == true then
+      love.graphics.setBlendMode("subtract","premultiplied")
+      love.graphics.setColor( 0.5, 0.5, 0.5)
+      love.graphics.rectangle("fill",0,0,64,64)
+      love.graphics.setColor( 1, 1, 1)
+      love.graphics.setBlendMode("alpha")
+      defaultFont:setLineHeight(1.1)
+      love.graphics.setFont(defaultFont)
+      love.graphics.printf("PAUSED",7,16,50,"center")
+    end
+    if objectPlayerShip.isDead == true then
+      love.graphics.setColor( 1, 1, 1)
+      defaultFont:setLineHeight(1.1)
+      love.graphics.setFont(defaultFont)
+      love.graphics.printf("YOU DIED\n\nPRESS R TO\nRESPAWN",7,16,50,"center")
+    end
     graphics.makeCanvas()
 	
 end
@@ -225,31 +253,37 @@ end
 --The commands below are for debug.
 
 function love.keypressed(key)
-	if key == "space" and Gamestate.current()==game then
-		objects.spawnMedAsteroid(asteroidRandomX[love.math.random(#asteroidRandomX)], objectPlayerShip.y-love.math.random(0,48))
-	end
-	if key == "m" and audio.loadedTrack ~= nil then --Load alternate track
-		audio.loadedTrack:stop()
-		audio.setTrack(audio.Track2)
-		audio.loadedTrack:play()
-	end
-	if key == "l" and audio.loadedTrack ~= nil then --We use this to test the audio loop
-		audio.loadedTrack:seek(audio.loopEnd-321935,"samples")
-	end
-	if key == "b" then --Switch back to the other state
-		Gamestate.switch(menu)
-	end
-  if key == "g" then --Make the player die
-		objectPlayerShip.Health = 0
-	end
-  if key == "r" then --Reset the state
-    camDelay = 0
-    for i,v in ipairs(asteroidList) do --Clear all the asteroids
-      table.remove(asteroidList, self)
+  if isPaused == false then  
+    --[[if key == "space" and Gamestate.current()==game then
+      --objects.spawnMedAsteroid(asteroidRandomX[love.math.random(#asteroidRandomX)], objectPlayerShip.y-love.math.random(0,48))
+      objects.spawnBullet(objectPolice.x, objectPolice.y-32)
     end
-		Gamestate.switch(game)
+    if key == "m" and audio.loadedTrack ~= nil then --Load alternate track
+      audio.loadedTrack:stop()
+      audio.setTrack(audio.Track2)
+      audio.loadedTrack:play()
+    end
+    if key == "l" and audio.loadedTrack ~= nil then --We use this to test the audio loop
+      audio.loadedTrack:seek(audio.loopEnd-321935,"samples")
+    end
+    if key == "b" then --Switch back to the other state
+      Gamestate.switch(menu)
+    end
+    if key == "g" then --Make the player die
+      objectPlayerShip.Health = 0
+    end]]
+    if key == "r" and objectPlayerShip.isDead == true then --Reset the state
+      camDelay = 0 --Temporarily set cam move time to 0 to prevent whipping on respawn
+      asteroidList = {} --Clear all the asteroids
+      Gamestate.switch(game)
+  end
     
 	end
+  if key == "p" and isPaused == false and objectPlayerShip.isDead == false then
+      isPaused = true
+  elseif key == "p" and isPaused == true and objectPlayerShip.isDead == false then
+      isPaused = false
+  end
 end
 
 
