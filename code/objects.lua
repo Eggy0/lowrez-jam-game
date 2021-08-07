@@ -1,5 +1,7 @@
 local objects = {}
 
+
+
 --playerShip object
 
 
@@ -123,6 +125,7 @@ asteroidRandomX = {-4,68}
 
 function objects.spawnAsteroid(asteroidX, asteroidY,asteroidVelocityX)
 	objectAsteroid = {}
+  
 	objectAsteroid.Sprite = asteroidGraphics[love.math.random(#asteroidGraphics)]
 	objectAsteroid.x = asteroidX
 	objectAsteroid.y = asteroidY
@@ -161,7 +164,15 @@ function objects.rotateAsteroid(deltaDebris)
 	end
 end
 
---main menu
+--Medium asteroid object
+objectMedAsteroid = setmetatable({},{ __index = objectAsteroid })
+
+function objects.spawnMedAsteroid(asteroidX, asteroidY,asteroidVelocityX)
+  objectMedAsteroid = {}
+  
+  table.insert(asteroidList,objectMedAsteroid)
+
+end
 
 
 

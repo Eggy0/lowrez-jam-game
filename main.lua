@@ -13,6 +13,11 @@ game = require("code/states/game")
 
 mainMenu = require("code/states/mainMenu")
 
+local originalSetMT = setmetatable
+setmetatable = function (tbl, meta)
+    originalSetMT(tbl, meta)
+    return tbl
+end
 
 function love.load()
   love.graphics.setDefaultFilter('nearest', 'nearest')

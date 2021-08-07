@@ -9,6 +9,7 @@ local camDelay = 30
 
 
 
+
 function CheckCollision(x1,y1,w1,h1, x2,y2,w2,h2)
   return x1 < x2+w2 and
          x2 < x1+w1 and
@@ -55,7 +56,8 @@ function game:enter()
 
 
 	objects.spawnPlayerShip(31,worldY)
-	objects.spawnPolice(31,objectPlayerShip.y+128)
+	objects.spawnPolice(31,100)
+  policeFollowFlag = false
 
 	
 	if audio.loadedTrack ~= nil then
@@ -86,8 +88,11 @@ function game:update(dt)
      asteroidTimer = love.math.random(0.2,3) 
   end    
 	objects.playerShipControls(dt)
-	objects.policeFollow(dt)
-	--objectPolice.Velocity = objectPolice.Velocity + 0.2*dt
+	if  policeFollowFlag == true then
+    objects.policeFollow(dt)
+  end
+  policeFollowFlag = true --There was a bug where the police ship would sometimes instantly catch up with the player on spawn despite being created far beneath.
+	objectPolice.Velocity = objectPolice.Velocity + 0.2*dt
 	blinkTimer = blinkTimer + 1*dt
 	if blinkTimer >= 0.05 then
 		blink = blink *-1
@@ -100,8 +105,13 @@ function game:update(dt)
 	if objectPlayerShip.iframe > 0 then
 		objectPlayerShip.iframe = objectPlayerShip.iframe - 1*dt
 	end
-	
-  playerShipExplosionAnimation:update(dt)
+	if objectPlayerShip.isDead == true then
+    playerShipExplosionAnimation:resume()
+    playerShipExplosionAnimation:update(dt)
+  elseif objectPlayerShip.isDead == false then
+    playerShipExplosionAnimation:gotoFrame(1)
+    playerShipExplosionAnimation:pause()
+  end
 	gameBackgroundAnimation:update(dt)
 	backgroundYTimer = backgroundYTimer + 1*dt
 	if backgroundYTimer >= 0.1 then
@@ -114,14 +124,14 @@ function game:update(dt)
 
 	
 	for i,v in ipairs(asteroidList) do
-		if circleRectangleIntersect(v.x+5,v.y+4, 1,objectPlayerShip.x,objectPlayerShip.y-6,11,11) then         --CheckCollision(objectPlayerShip.x,objectPlayerShip.y-6,11,11, v.x+3,v.y+3,3,3) then
-			collisionCheck = "Yes"
+		if circleRectangleIntersect(v.x+5,v.y+4, 1,objectPlayerShip.x,objectPlayerShip.y-6,11,11) then
+
 			if objectPlayerShip.iframe <= 0 then
 				objectPlayerShip.Health= objectPlayerShip.Health - 1
 				objectPlayerShip.iframe = 5
 			end
 		else
-			collisionCheck = "No"
+
 		end
 
 		if v.x >= 70 or v.x <= -10 or v.y >= objectPlayerShip.y + 70 then --Asteroid removal code
@@ -138,7 +148,7 @@ function game:update(dt)
     elseif distanceMeter > 60 then
       distanceMeter = 60
     end
-  if -objectPlayerShip.y>objectPlayerShip.Score then
+  if -(objectPlayerShip.y/10)>objectPlayerShip.Score then
       objectPlayerShip.Score = -(objectPlayerShip.y/10)
   end
       
@@ -158,29 +168,29 @@ function game:draw()
   
 	
 		if objectPlayerShip.iframe >0 then
-	love.graphics.setColor( 1, 1, 1, blink)
-end
-if objectPlayerShip.isDead == false then
-	love.graphics.draw(objectPlayerShip.Sprite, objectPlayerShip.x, objectPlayerShip.y,0,1,1,4,8)
-end
-	love.graphics.setColor( 1, 1, 1, 1)
+      love.graphics.setColor( 1, 1, 1, blink)
+    end
+    if objectPlayerShip.isDead == false then
+      love.graphics.draw(objectPlayerShip.Sprite, objectPlayerShip.x, objectPlayerShip.y,0,1,1,4,8)
+    end
+    love.graphics.setColor( 1, 1, 1, 1)
   
-	love.graphics.draw(objectPolice.Sprite, math.floor(objectPolice.x), math.floor(objectPolice.y),0,1,1,20,22)
+    love.graphics.draw(objectPolice.Sprite, math.floor(objectPolice.x), math.floor(objectPolice.y),0,1,1,20,22)
 	
-if objectPlayerShip.isDead == false then
-    objects.drawThruster()
-  end
-if objectPlayerShip.isDead == true then
-  playerShipExplosionAnimation:draw(playerShipExplosion,objectPlayerShip.x-4,objectPlayerShip.y-8)
-end
+    if objectPlayerShip.isDead == false then
+      objects.drawThruster()
+    end
+
   
 	
-	for i,v in ipairs(asteroidList) do
-		love.graphics.draw(v.Sprite, v.x,v.y,v.Rotation,1,1,4,4)
+    for i,v in ipairs(asteroidList) do
+      love.graphics.draw(v.Sprite, v.x,v.y,v.Rotation,1,1,4,4)
 
-	end
+    end
 	
-
+    if objectPlayerShip.isDead == true then
+      playerShipExplosionAnimation:draw(playerShipExplosion,objectPlayerShip.x-4,objectPlayerShip.y-8)
+    end
 		
 		
 		cam:pop('mainLayer') 
@@ -216,7 +226,7 @@ end
 
 function love.keypressed(key)
 	if key == "space" and Gamestate.current()==game then
-		objects.spawnAsteroid(asteroidRandomX[love.math.random(#asteroidRandomX)], objectPlayerShip.y-love.math.random(0,48))
+		objects.spawnMedAsteroid(asteroidRandomX[love.math.random(#asteroidRandomX)], objectPlayerShip.y-love.math.random(0,48))
 	end
 	if key == "m" and audio.loadedTrack ~= nil then --Load alternate track
 		audio.loadedTrack:stop()
@@ -234,6 +244,9 @@ function love.keypressed(key)
 	end
   if key == "r" then --Reset the state
     camDelay = 0
+    for i,v in ipairs(asteroidList) do --Clear all the asteroids
+      table.remove(asteroidList, self)
+    end
 		Gamestate.switch(game)
     
 	end

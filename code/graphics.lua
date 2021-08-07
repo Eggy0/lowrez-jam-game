@@ -26,9 +26,9 @@ function graphics.loadGraphics()
 	gameBackgroundGrid = anim8.newGrid(64,64,gameBackgroundTest:getWidth(), gameBackgroundTest:getHeight())
 	gameBackgroundAnimation = anim8.newAnimation(gameBackgroundGrid('1-7',1),0.1)
   
-  playerShipExplosion = love.graphics.newImage("graphics/gameplay_background_test.png")
+  playerShipExplosion = love.graphics.newImage("graphics/gameAssetExplosion.png")
 	playerShipExplosionGrid = anim8.newGrid(8,8,playerShipExplosion:getWidth(), playerShipExplosion:getHeight())
-	playerShipExplosionAnimation = anim8.newAnimation(playerShipExplosionGrid('1-5',1),0.1)
+	playerShipExplosionAnimation = anim8.newAnimation(playerShipExplosionGrid('1-6',1),0.07,'pauseAtEnd')
 	
 end
 
