@@ -32,11 +32,15 @@ function circleRectangleIntersect(cx, cy, cr, rx, ry, rw, rh)
 
 	return corner_distance_sq <= math.pow(cr, 2)
 end
-
 function distanceFrom(x1,y1,x2,y2) return math.sqrt((x2 - x1) ^ 2 + (y2 - y1) ^ 2) end
 
-	cam = Camera(64, 64, { x = -32, y = worldY, offsetY = 40})
+cam = Camera(64, 64, { x = -32, y = worldY, offsetY = 40})
   
+if audio.loadedTrack ~= nil then
+		audio.loadedTrack:stop() --Stop the track if it's already playing
+end
+audio.setTrack(audio.Track1)
+audio.loadedTrack:play()
 
 function game:enter()
 
@@ -50,12 +54,7 @@ function game:enter()
 	objects.spawnPolice(31,worldY+100)
   policeFollowFlag = false
 
-	
-	if audio.loadedTrack ~= nil then
-		audio.loadedTrack:stop() --Stop the track if it's already playing
-	end
-	audio.setTrack(audio.Track1)
-	audio.loadedTrack:play()
+
 
 end
 
