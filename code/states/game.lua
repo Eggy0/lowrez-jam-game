@@ -178,8 +178,6 @@ function game:draw()
     end
     if objectPlayerShip.isDead == false then
       love.graphics.draw(objectPlayerShip.Sprite, objectPlayerShip.x, objectPlayerShip.y,0,1,1,4,8)
-      love.graphics.setColor( 1, 0, 0, 1)
-      love.graphics.rectangle("line",objectPlayerShip.hitX,objectPlayerShip.hitY,objectPlayerShip.hitW,objectPlayerShip.hitH)
     end
     love.graphics.setColor( 1, 1, 1, 1)
   
@@ -193,9 +191,6 @@ function game:draw()
 	
     for i,v in ipairs(asteroidList) do
       love.graphics.draw(v.Sprite, v.x,v.y,v.Rotation,1,1,4,4)
-      love.graphics.setColor( 1, 0, 0, 1)
-      love.graphics.circle("line",v.x,v.y,v.radius)
-      love.graphics.setColor( 1, 1, 1, 1)
     end
     
     for i,v in ipairs(bulletList) do
