@@ -38,7 +38,7 @@ function love.load()
 	graphics.loadGraphics()
 	Gamestate.registerEvents()
     --Gamestate.switch(menu)
-	Gamestate.switch(gameTest)
+	Gamestate.switch(game)
 end
 
 function love.draw()
