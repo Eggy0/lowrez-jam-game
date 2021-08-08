@@ -126,8 +126,9 @@ function objects.policeFollow(deltaPolice)
     if distance <= 48 and objectPlayerShip.isDead == false and (objectPolice.x >= objectPlayerShip.x - 4 or objectPolice.x <= objectPlayerShip.x + 4) then --Produce bullets when in range
         bulletTimerCount = bulletTimerCount + 1*deltaPolice
         if bulletTimerCount >= objectPolice.BulletTimer then
-          objects.spawnBullet(objectPolice.x-4, objectPolice.y-20)
+          objects.spawnBullet(objectPolice.x-3, objectPolice.y-20)
           objects.spawnBullet(objectPolice.x+3, objectPolice.y-20)
+          soundPoliceBullet:play()
           bulletTimerCount = 0
         end
     end

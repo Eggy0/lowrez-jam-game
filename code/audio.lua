@@ -8,6 +8,9 @@ audio.Track1 = {Source = love.audio.newSource('audio/bg/track1.ogg',"stream"),Ju
 audio.Track2 = {Source = love.audio.newSource('audio/bg/restoring_the_light_facing_the_dark_8-bit.ogg',"stream"),JumpBackTo = 26956,LoopPosition = 6939039}
 
 
+soundExplosion = love.audio.newSource('audio/sfx/sfx1.wav',"static")
+soundPoliceBullet = love.audio.newSource('audio/sfx/sfx2.wav',"static")
+
 
 
 function audio.setTrack (nameOfTrack)

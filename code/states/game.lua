@@ -7,7 +7,7 @@ local distanceMeter, asteroidTimerCount = 0, 0, 0
 local asteroidTimer = love.math.random(0.2,3)
 local camDelay = 30
 local isPaused = false
-
+local powerup = require('code/powerups')
 
 
 
@@ -44,7 +44,7 @@ audio.loadedTrack:play()
 
 function game:enter()
 
-
+  deathFinished = false --So the death sound only plays once
   
   backgroundX = 0
 	backgroundY = worldY
@@ -202,6 +202,10 @@ function game:draw()
     end
 	
     if objectPlayerShip.isDead == true then
+      if deathFinished == false then
+        soundExplosion:play()
+        deathFinished = true
+      end
       playerShipExplosionAnimation:draw(playerShipExplosion,objectPlayerShip.x-4,objectPlayerShip.y-8)
     end
 		
@@ -252,12 +256,13 @@ end
 
 
 
-
 function love.keypressed(key)
     if isPaused == false then  
       if key == "r" then --Reset the state
         camDelay = 0 --Temporarily set cam move time to 0 to prevent whipping on respawn
         asteroidList = {} --Clear all the asteroids
+        bulletList = {} --Clear all the bullets if some still exist
+        powerupList = {} --Clear all the bullets if some still exist
         Gamestate.switch(game)
       end
     end
