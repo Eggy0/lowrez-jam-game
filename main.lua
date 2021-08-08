@@ -13,7 +13,7 @@ test = require("code/states/testFont")
 
 mainMenu = require("code/states/mainMenu")
 game = require("code/states/game")
-
+gameTest = require("code/states/gameTest")
 
 
 
@@ -38,7 +38,7 @@ function love.load()
 	graphics.loadGraphics()
 	Gamestate.registerEvents()
     --Gamestate.switch(menu)
-	Gamestate.switch(game)
+	Gamestate.switch(gameTest)
 end
 
 function love.draw()

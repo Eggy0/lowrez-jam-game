@@ -17,6 +17,11 @@ function objects.spawnPlayerShip(playerShipX, playerShipY)
 	objectPlayerShip.Thruster = false
 	objectPlayerShip.iframe = 0
   objectPlayerShip.isDead = false
+  objectPlayerShip.hitX = objectPlayerShip.x-1
+  objectPlayerShip.hitY = objectPlayerShip.y-8
+  objectPlayerShip.hitW = 3
+  objectPlayerShip.hitH = 8
+  
 
 end
 
@@ -31,6 +36,8 @@ end
 
 function objects.playerShipControls(deltaShip)
     if objectPlayerShip.isDead == false then
+        objectPlayerShip.hitX = objectPlayerShip.x-1
+        objectPlayerShip.hitY = objectPlayerShip.y-8
     
       local direction = {0, 0} -- Create a table with two elements for x and y respectively.
       local isMoving = false
@@ -125,7 +132,7 @@ function objects.policeFollow(deltaPolice)
         end
     end
     
-    if CheckCollision(objectPlayerShip.x-1,objectPlayerShip.y,4,2, objectPolice.x-3,objectPolice.y-18,7,19) or CheckCollision(objectPlayerShip.x-1,objectPlayerShip.y,4,2, objectPolice.x-16,objectPolice.y-10,34,10) then
+    if CheckCollision(objectPlayerShip.hitX,objectPlayerShip.hitY,objectPlayerShip.hitW,objectPlayerShip.hitH, objectPolice.x-3,objectPolice.y-18,7,19) or CheckCollision(objectPlayerShip.hitX,objectPlayerShip.hitY,objectPlayerShip.hitW,objectPlayerShip.hitH, objectPolice.x-16,objectPolice.y-10,34,10) then
         objectPlayerShip.Health = 0
     end 
   
@@ -136,7 +143,7 @@ bulletList = {}
 function objects.spawnBullet(bulletX, bulletY)
   objectBullet = {}
   objectBullet.width = 1
-  objectBullet.length = 3
+  objectBullet.length = 2
   objectBullet.x = bulletX
   objectBullet.y = bulletY
   objectBullet.Velocity = objectPlayerShip.Velocity + 50
@@ -146,7 +153,7 @@ end
 function objects.moveBullet(deltaBullet)
   for i,v in ipairs(bulletList) do
     v.y = v.y - v.Velocity*deltaBullet
-    if CheckCollision(v.x,v.y,v.width,v.length,objectPlayerShip.x-1,objectPlayerShip.y,4,2) and objectPlayerShip.isDead == false then
+    if CheckCollision(v.x,v.y,v.width,v.length,objectPlayerShip.hitX,objectPlayerShip.hitY,objectPlayerShip.hitW,objectPlayerShip.hitH) and objectPlayerShip.isDead == false then
       objectPlayerShip.Health = 0
       table.remove(bulletList,i)
     end
@@ -185,7 +192,7 @@ function objects.spawnAsteroid(asteroidX, asteroidY,asteroidVelocityX)
 	objectAsteroid.VelocityY = 0
   objectAsteroid.offsetX = 5
   objectAsteroid.offsetY = 4
-  objectAsteroid.radius = 1
+  objectAsteroid.radius = 4
 	table.insert(asteroidList,objectAsteroid)
 end
 

@@ -5,8 +5,9 @@ local blinkTimer = 0
 local worldY = 0
 local distanceMeter asteroidTimerCount = 0
 local asteroidTimer = love.math.random(0.2,3)
-local camDelay = 30
+local camDelay = 10
 local isPaused = false
+local powerup = require('code/powerups')
 
 
 
@@ -51,8 +52,7 @@ function game:enter()
 	canvas:setFilter("nearest","nearest")
 	
 	objects.spawnPlayerShip(31,worldY)
-	objects.spawnPolice(31,worldY+100)
-  policeFollowFlag = false
+
 
 
 
@@ -61,31 +61,18 @@ end
 
 function gameUpdate(dt) --Need this to be able to pause the game
   
-  
-  distance = distanceFrom(objectPlayerShip.x,objectPlayerShip.y,objectPolice.x,objectPolice.y)
-  shipScreenX, shipScreenY = cam:getScreenCoordinates(objectPolice.x, objectPolice.y)
 
+  powerup.movePowerup(dt)
 	flux.update(dt)
   
   flux.to(cam, camDelay*dt, {y = objectPlayerShip.y*-1})
-  if camDelay ~= 30 then
-    camDelay = 30
+  if camDelay ~= 10 then
+    camDelay = 10
   end
-  if objectPlayerShip.isDead == false then
-    asteroidTimerCount = asteroidTimerCount + 1*dt
-    if asteroidTimerCount >= asteroidTimer then
-       objects.spawnAsteroid(asteroidRandomX[love.math.random(#asteroidRandomX)], objectPlayerShip.y-love.math.random(4,32),love.math.random(20,50))
-       asteroidTimerCount = 0
-       asteroidTimer = love.math.random(0.2,3) 
-    end    
-  end
+
   
 	objects.playerShipControls(dt)
-	if  policeFollowFlag == true then
-  objects.policeFollow(dt)
-  end
-  policeFollowFlag = true --There was a bug where the police ship would sometimes instantly catch up with the player on spawn despite being created far beneath.
-	objectPolice.Velocity = objectPolice.Velocity + 0.2*dt
+
 	blinkTimer = blinkTimer + 1*dt
 	if blinkTimer >= 0.05 then
 		blink = blink *-1
@@ -139,12 +126,7 @@ function gameUpdate(dt) --Need this to be able to pause the game
 
 	
   cam:update()
-  distanceMeter = -2+distance/2
-    if distanceMeter < 24 then
-      distanceMeter = 24
-    elseif distanceMeter > 60 then
-      distanceMeter = 60
-    end
+  
   if -(objectPlayerShip.y/10)>objectPlayerShip.Score then
       objectPlayerShip.Score = -(objectPlayerShip.y/10)
   end
@@ -165,7 +147,7 @@ function game:draw()
 	cam:push()
     --Debug test some hitboxes
 
-    
+     love.graphics.setLineStyle("rough")
     for i=-1,2 do
       gameBackgroundAnimation:draw(gameBackgroundTest,backgroundX,backgroundY-(gameBackgroundTest:getHeight())*i)
     end
@@ -179,11 +161,12 @@ function game:draw()
     if objectPlayerShip.isDead == false then
       love.graphics.draw(objectPlayerShip.Sprite, objectPlayerShip.x, objectPlayerShip.y,0,1,1,4,8)
       love.graphics.setColor( 1, 0, 0, 1)
+     
       love.graphics.rectangle("line",objectPlayerShip.hitX,objectPlayerShip.hitY,objectPlayerShip.hitW,objectPlayerShip.hitH)
     end
     love.graphics.setColor( 1, 1, 1, 1)
   
-    love.graphics.draw(objectPolice.Sprite, math.floor(objectPolice.x), math.floor(objectPolice.y),0,1,1,20,22)
+
 	
     if objectPlayerShip.isDead == false then
       objects.drawThruster()
@@ -195,6 +178,12 @@ function game:draw()
       love.graphics.draw(v.Sprite, v.x,v.y,v.Rotation,1,1,4,4)
       love.graphics.setColor( 1, 0, 0, 1)
       love.graphics.circle("line",v.x,v.y,v.radius)
+      love.graphics.setColor( 1, 1, 1, 1)
+    end
+    for i,v in ipairs(powerupList) do
+      love.graphics.draw(v.Sprite, v.x,v.y)
+      love.graphics.setColor( 1, 0, 0, 1)
+      love.graphics.circle("line",v.x,v.y,4)
       love.graphics.setColor( 1, 1, 1, 1)
     end
     
@@ -216,22 +205,17 @@ function game:draw()
     love.graphics.print(string.format("%06d",objectPlayerShip.Score),28,1)
     if objectPlayerShip.isDead == false then
     
-      --love.graphics.print(objectPolice.Velocity,32,8)
-      --love.graphics.print(audio.loopStart,8,8)
-      --love.graphics.print(audio.position,8,16)
-      --love.graphics.print(audio.loopEnd,8,24)
+--      love.graphics.print(objectPlayerShip.iframe,32,8)
+--      love.graphics.print(objectPlayerShip.Velocity,8,8)
+     -- love.graphics.print(worldX .. " " .. worldY,8,8)
+--      love.graphics.print(powerupTimer,8,16)
+--      love.graphics.print(powerupSpeedValue,8,24)
       --love.graphics.print("Collision: " .. collisionCheck,8,40)
       
       for i=0,objectPlayerShip.Health-1 do
         love.graphics.draw(playerShipHealth,(i*8),0)
       end
-      love.graphics.draw(playerIcon,0,8)
-      love.graphics.draw(policeIcon,0,distanceMeter-2,0,1,1,0,7)
-      love.graphics.setLineWidth(1)
-      love.graphics.setLineStyle("rough")
-      if distanceMeter-10 > 15 then
-        love.graphics.line( 4, 15, 4, distanceMeter-10)
-      end
+
     end
     if isPaused == true then
       love.graphics.setBlendMode("subtract","premultiplied")
@@ -257,32 +241,47 @@ end
 --The commands below are for debug.
 
 function love.keypressed(key)
---  if isPaused == false then  
---    if key == "space" and Gamestate.current()==game then
---      --objects.spawnMedAsteroid(asteroidRandomX[love.math.random(#asteroidRandomX)], objectPlayerShip.y-love.math.random(0,48))
---      objects.spawnBullet(objectPolice.x, objectPolice.y-32)
---    end
---    if key == "m" and audio.loadedTrack ~= nil then --Load alternate track
---      audio.loadedTrack:stop()
---      audio.setTrack(audio.Track2)
---      audio.loadedTrack:play()
---    end
---    if key == "l" and audio.loadedTrack ~= nil then --We use this to test the audio loop
---      audio.loadedTrack:seek(audio.loopEnd-321935,"samples")
---    end
---    if key == "b" then --Switch back to the other state
---      Gamestate.switch(menu)
---    end
---    if key == "g" then --Make the player die
---      objectPlayerShip.Health = 0
---    end
+  if isPaused == false then  
+    if key == "space" and Gamestate.current()==game then
+        powerup.spawnSpeed(objectPlayerShip.x, objectPlayerShip.y-64)
+    end
+    if key == "lctrl" and Gamestate.current()==game then
+        powerup.spawnSuperSpeed(objectPlayerShip.x, objectPlayerShip.y-64)
+    end
+    if key == "rctrl" and Gamestate.current()==game then
+        powerup.spawnPermaSpeed(objectPlayerShip.x, objectPlayerShip.y-64)
+    end
+    if key == "lshift" and Gamestate.current()==game then
+        powerup.spawnHealth(objectPlayerShip.x, objectPlayerShip.y-64)
+    end 
+    if key == "rshift" and Gamestate.current()==game then
+        powerup.spawnInvincibility(objectPlayerShip.x, objectPlayerShip.y-64)
+    end   
+    if key == "n" and Gamestate.current()==game then
+        objects.spawnAsteroid(asteroidRandomX[love.math.random(#asteroidRandomX)], objectPlayerShip.y-love.math.random(0,48))
+    end
+    
+    if key == "m" and audio.loadedTrack ~= nil then --Load alternate track
+      audio.loadedTrack:stop()
+      audio.setTrack(audio.Track2)
+      audio.loadedTrack:play()
+    end
+    if key == "l" and audio.loadedTrack ~= nil then --We use this to test the audio loop
+      audio.loadedTrack:seek(audio.loopEnd-321935,"samples")
+    end
+    if key == "b" then --Switch back to the other state
+      Gamestate.switch(menu)
+    end
+    if key == "g" then --Make the player die
+      objectPlayerShip.Health = 0
+    end
     if key == "r" and objectPlayerShip.isDead == true then --Reset the state
       camDelay = 0 --Temporarily set cam move time to 0 to prevent whipping on respawn
       asteroidList = {} --Clear all the asteroids
       Gamestate.switch(game)
-    end
+  end
     
-
+	end
   if key == "p" and isPaused == false and objectPlayerShip.isDead == false then
       isPaused = true
   elseif key == "p" and isPaused == true and objectPlayerShip.isDead == false then
