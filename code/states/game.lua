@@ -3,7 +3,7 @@ local collisionCheck = "No"
 local blink = 1
 local blinkTimer = 0
 local worldY = 0
-local distanceMeter, asteroidTimerCount = 0, 0
+local distanceMeter, asteroidTimerCount = 0, 0, 0
 local asteroidTimer = love.math.random(0.2,3)
 local camDelay = 30
 local isPaused = false
@@ -40,10 +40,12 @@ if audio.loadedTrack ~= nil then
 		audio.loadedTrack:stop() --Stop the track if it's already playing
 end
 audio.setTrack(audio.Track1)
-audio.loadedTrack:play()
+audio.loadedTrack:play()  
 
 function game:enter()
 
+
+  
   backgroundX = 0
 	backgroundY = worldY
 	backgroundYTimer = 0
@@ -249,32 +251,15 @@ function game:draw()
 end
 
 
---The commands below are for debug.
+
 
 function love.keypressed(key)
---  if isPaused == false then  
---    if key == "space" and Gamestate.current()==game then
---      --objects.spawnMedAsteroid(asteroidRandomX[love.math.random(#asteroidRandomX)], objectPlayerShip.y-love.math.random(0,48))
---      objects.spawnBullet(objectPolice.x, objectPolice.y-32)
---    end
---    if key == "m" and audio.loadedTrack ~= nil then --Load alternate track
---      audio.loadedTrack:stop()
---      audio.setTrack(audio.Track2)
---      audio.loadedTrack:play()
---    end
---    if key == "l" and audio.loadedTrack ~= nil then --We use this to test the audio loop
---      audio.loadedTrack:seek(audio.loopEnd-321935,"samples")
---    end
---    if key == "b" then --Switch back to the other state
---      Gamestate.switch(menu)
---    end
---    if key == "g" then --Make the player die
---      objectPlayerShip.Health = 0
---    end
-    if key == "r" and objectPlayerShip.isDead == true then --Reset the state
-      camDelay = 0 --Temporarily set cam move time to 0 to prevent whipping on respawn
-      asteroidList = {} --Clear all the asteroids
-      Gamestate.switch(game)
+    if isPaused == false then  
+      if key == "r" then --Reset the state
+        camDelay = 0 --Temporarily set cam move time to 0 to prevent whipping on respawn
+        asteroidList = {} --Clear all the asteroids
+        Gamestate.switch(game)
+      end
     end
     
 

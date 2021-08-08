@@ -13,7 +13,7 @@ test = require("code/states/testFont")
 
 mainMenu = require("code/states/mainMenu")
 game = require("code/states/game")
-gameTest = require("code/states/gameTest")
+--testGame = require("code/states/gameTest")
 
 
 

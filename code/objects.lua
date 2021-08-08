@@ -36,8 +36,8 @@ end
 
 function objects.playerShipControls(deltaShip)
     if objectPlayerShip.isDead == false then
-        objectPlayerShip.hitX = objectPlayerShip.x-1
-        objectPlayerShip.hitY = objectPlayerShip.y-8
+        objectPlayerShip.hitX = math.round(objectPlayerShip.x-1)
+        objectPlayerShip.hitY = math.round(objectPlayerShip.y-8)
     
       local direction = {0, 0} -- Create a table with two elements for x and y respectively.
       local isMoving = false

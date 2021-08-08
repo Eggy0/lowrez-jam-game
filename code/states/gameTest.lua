@@ -1,9 +1,9 @@
-local game = {}
+local testGame = {}
 local collisionCheck = "No"
 local blink = 1
 local blinkTimer = 0
 local worldY = 0
-local distanceMeter asteroidTimerCount = 0
+asteroidTimerCount = 0
 local asteroidTimer = love.math.random(0.2,3)
 local camDelay = 10
 local isPaused = false
@@ -33,7 +33,6 @@ function circleRectangleIntersect(cx, cy, cr, rx, ry, rw, rh)
 
 	return corner_distance_sq <= math.pow(cr, 2)
 end
-function distanceFrom(x1,y1,x2,y2) return math.sqrt((x2 - x1) ^ 2 + (y2 - y1) ^ 2) end
 
 cam = Camera(64, 64, { x = -32, y = worldY, offsetY = 40})
   
@@ -43,7 +42,7 @@ end
 audio.setTrack(audio.Track1)
 audio.loadedTrack:play()
 
-function game:enter()
+function testGame:enter()
 
   backgroundX = 0
 	backgroundY = worldY
@@ -59,7 +58,7 @@ function game:enter()
 end
 
 
-function gameUpdate(dt) --Need this to be able to pause the game
+function testGameUpdate(dt) --Need this to be able to pause the game
   
 
   powerup.movePowerup(dt)
@@ -133,16 +132,16 @@ function gameUpdate(dt) --Need this to be able to pause the game
      
 end  
 
-function game:update(dt)
+function testGame:update(dt)
   if isPaused == false then
-    gameUpdate(dt)
+    testGameUpdate(dt)
   end
   audio.Update() --This is outside the pause function because the music needs to loop
 
 end
 
 
-function game:draw()
+function testGame:draw()
 	
 	cam:push()
     --Debug test some hitboxes
@@ -241,23 +240,23 @@ end
 --The commands below are for debug.
 
 function love.keypressed(key)
-  if isPaused == false then  
-    if key == "space" and Gamestate.current()==game then
+  if isPaused == false and Gamestate.current()==testGame then  
+    if key == "space" and Gamestate.current()==testGame then
         powerup.spawnSpeed(objectPlayerShip.x, objectPlayerShip.y-64)
     end
-    if key == "lctrl" and Gamestate.current()==game then
+    if key == "lctrl" and Gamestate.current()==testGame then
         powerup.spawnSuperSpeed(objectPlayerShip.x, objectPlayerShip.y-64)
     end
-    if key == "rctrl" and Gamestate.current()==game then
+    if key == "rctrl" and Gamestate.current()==testGame then
         powerup.spawnPermaSpeed(objectPlayerShip.x, objectPlayerShip.y-64)
     end
-    if key == "lshift" and Gamestate.current()==game then
+    if key == "lshift" and Gamestate.current()==testGame then
         powerup.spawnHealth(objectPlayerShip.x, objectPlayerShip.y-64)
     end 
-    if key == "rshift" and Gamestate.current()==game then
+    if key == "rshift" and Gamestate.current()==testGame then
         powerup.spawnInvincibility(objectPlayerShip.x, objectPlayerShip.y-64)
     end   
-    if key == "n" and Gamestate.current()==game then
+    if key == "n" and Gamestate.current()==testGame then
         objects.spawnAsteroid(asteroidRandomX[love.math.random(#asteroidRandomX)], objectPlayerShip.y-love.math.random(0,48))
     end
     
@@ -269,25 +268,13 @@ function love.keypressed(key)
     if key == "l" and audio.loadedTrack ~= nil then --We use this to test the audio loop
       audio.loadedTrack:seek(audio.loopEnd-321935,"samples")
     end
-    if key == "b" then --Switch back to the other state
-      Gamestate.switch(menu)
-    end
+
     if key == "g" then --Make the player die
       objectPlayerShip.Health = 0
     end
-    if key == "r" and objectPlayerShip.isDead == true then --Reset the state
-      camDelay = 0 --Temporarily set cam move time to 0 to prevent whipping on respawn
-      asteroidList = {} --Clear all the asteroids
-      Gamestate.switch(game)
   end
-    
-	end
-  if key == "p" and isPaused == false and objectPlayerShip.isDead == false then
-      isPaused = true
-  elseif key == "p" and isPaused == true and objectPlayerShip.isDead == false then
-      isPaused = false
-  end
+
 end
 
 
-return game
+return testGame
