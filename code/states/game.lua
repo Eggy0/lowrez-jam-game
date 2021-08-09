@@ -48,6 +48,8 @@ function game:enter()
   backgroundX = 0
 	backgroundY = worldY
 	backgroundYTimer = 0
+  
+  
 
 	canvas:setFilter("nearest","nearest")
 	
@@ -109,7 +111,7 @@ function gameUpdate(dt) --Need this to be able to pause the game
   if objectPlayerShip.isDead == false then
     asteroidTimerCount = asteroidTimerCount + 1*dt
     if asteroidTimerCount >= asteroidTimer then
-       objects.spawnAsteroid(asteroidRandomX[love.math.random(#asteroidRandomX)], objectPlayerShip.y-love.math.random(4,32),love.math.random(20,50))
+       objects.spawnAsteroid(asteroidRandomX[love.math.random(#asteroidRandomX)], objectPlayerShip.y-love.math.random(32,64),love.math.random(20,50))
        asteroidTimerCount = 0
        asteroidTimer = love.math.random(0.2,3) 
     end    
@@ -304,6 +306,7 @@ function love.keypressed(key)
         asteroidList = {} --Clear all the asteroids
         bulletList = {} --Clear all the bullets if some still exist
         powerupList = {} --Clear all the bullets if some still exist
+        powerupTimer, powerupChoice = 0, nil
         stateRestarting = true
         Gamestate.switch(game)
       end
