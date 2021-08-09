@@ -21,7 +21,7 @@ function powerup.spawnSpeed(powerX, powerY)
     SpeedPowerup = setmetatable({
         x = powerX, 
         y = powerY,
-        Sprite = playerShip,
+        Sprite = powerSpeed,
         Time = 5
         },powerup)
     table.insert(powerupList,SpeedPowerup)
@@ -30,7 +30,7 @@ function powerup.spawnSuperSpeed(powerX, powerY)
     SuperSpeedPowerup = setmetatable({
         x = powerX, 
         y = powerY,
-        Sprite = playerShip,
+        Sprite = powerSuperSpeed,
         Time = 5,
         Value = 30
         },powerup)
@@ -40,7 +40,7 @@ function powerup.spawnPermaSpeed(powerX, powerY)
     PermaSpeedPowerup = setmetatable({
         x = powerX, 
         y = powerY,
-        Sprite = playerShip,
+        Sprite = powerPermaSpeed,
         Value = 15
         },powerup)
     table.insert(powerupList,PermaSpeedPowerup)
@@ -50,7 +50,7 @@ function powerup.spawnHealth(powerX, powerY)
     HealthPowerup = setmetatable({
         x = powerX, 
         y = powerY,
-        Sprite = playerShipHealth,
+        Sprite = powerHealth,
         Value = 1,
         Effect = powerupEffects[2]
         },powerup)
@@ -61,7 +61,7 @@ function powerup.spawnInvincibility(powerX, powerY)
     InvincibilityPowerup = setmetatable({
         x = powerX, 
         y = powerY,
-        Sprite = playerShipHealth,
+        Sprite = powerInvincible,
         Value = 10,
         Effect = powerupEffects[3]
         },powerup)

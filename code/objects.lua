@@ -48,11 +48,17 @@ function objects.playerShipControls(deltaShip)
       if love.keyboard.isDown("up") then
           direction[2] = direction[2] - 1 -- Subtract 1 from y
           objectPlayerShip.Thruster = true
+          for i,v in ipairs(powerupList) do
+            v.y = v.y - (objectPlayerShip.Velocity-20)*deltaShip
+          end
           isMoving = true
 
       end
       if love.keyboard.isDown("down") then
           direction[2] = direction[2] + 1 -- Add 1 to y
+                    for i,v in ipairs(powerupList) do
+            v.y = v.y + (objectPlayerShip.Velocity-20)*deltaShip
+          end
           isMoving = true
       end
       if love.keyboard.isDown("left") then

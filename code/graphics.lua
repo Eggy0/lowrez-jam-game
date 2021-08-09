@@ -29,6 +29,17 @@ function graphics.loadGraphics()
   playerShipExplosion = love.graphics.newImage("graphics/gameAssetExplosion.png")
 	playerShipExplosionGrid = anim8.newGrid(8,8,playerShipExplosion:getWidth(), playerShipExplosion:getHeight())
 	playerShipExplosionAnimation = anim8.newAnimation(playerShipExplosionGrid('1-6',1),0.07,'pauseAtEnd')
+  
+  --powerups
+  powerInvincible = love.graphics.newImage("graphics/gameObjectInvincible.png")
+  powerHealth = love.graphics.newImage("graphics/gameObjectHealthUp.png")
+  powerSpeed = love.graphics.newImage("graphics/gameObjectSpeed.png")
+  powerSuperSpeed = love.graphics.newImage("graphics/gameObjectSuperSpeed.png")
+  powerPermaSpeed = love.graphics.newImage("graphics/gameObjectPermaSpeed.png")
+  powerGun = love.graphics.newImage("graphics/gameObjectGun.png")
+  
+  powerInvincibleGrid = anim8.newGrid(7,7,powerInvincible:getWidth(), powerInvincible:getHeight())
+	powerInvincibleAnimation = anim8.newAnimation(playerShipExplosionGrid('1-2',1),0.1)
 	
 end
 

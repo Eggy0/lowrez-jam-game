@@ -5,9 +5,12 @@ local blinkTimer = 0
 local worldY = 0
 local distanceMeter, asteroidTimerCount = 0, 0, 0
 local asteroidTimer = love.math.random(0.2,3)
-local camDelay = 30
+local camDelay = 10
 local isPaused = false
 local powerup = require('code/powerups')
+local chance = require('code/chance')
+local powerupTimer, powerupChoice = 0, nil
+
 
 
 
@@ -36,11 +39,7 @@ function distanceFrom(x1,y1,x2,y2) return math.sqrt((x2 - x1) ^ 2 + (y2 - y1) ^ 
 
 cam = Camera(64, 64, { x = -32, y = worldY, offsetY = 40})
   
-if audio.loadedTrack ~= nil then
-		audio.loadedTrack:stop() --Stop the track if it's already playing
-end
-audio.setTrack(audio.Track1)
-audio.loadedTrack:play()  
+
 
 function game:enter()
 
@@ -56,6 +55,15 @@ function game:enter()
 	objects.spawnPolice(31,worldY+100)
   policeFollowFlag = false
 
+  if stateRestarting == false or stateRestarting == nil then
+    if audio.loadedTrack ~= nil then
+      audio.loadedTrack:stop() --Stop the track if it's already playing
+    end
+    audio.setTrack(audio.Track1)
+    audio.loadedTrack:play() 
+  end
+  stateRestarting = false
+
 
 
 end
@@ -66,12 +74,37 @@ function gameUpdate(dt) --Need this to be able to pause the game
   
   distance = distanceFrom(objectPlayerShip.x,objectPlayerShip.y,objectPolice.x,objectPolice.y)
   shipScreenX, shipScreenY = cam:getScreenCoordinates(objectPolice.x, objectPolice.y)
+  powerupTimer = powerupTimer + 1*dt
+  if powerupTimer >= 10 and objectPlayerShip.isDead == false then
+    powerupChoice = chance.misc.weighted ({"speed","superspeed","permaspeed","health","invincible"}, {35,15,10,25,15})
+    
+    if powerupChoice == "speed" then
+      powerup.spawnSpeed(love.math.random(16,56), objectPlayerShip.y - 64)
+    end
+    if powerupChoice == "superspeed" then
+      powerup.spawnSuperSpeed(love.math.random(16,56), objectPlayerShip.y - 64)
+    end  
+    if powerupChoice == "permaspeed" then
+      powerup.spawnPermaSpeed(love.math.random(16,56), objectPlayerShip.y - 64)
+    end
+    if powerupChoice == "health" then
+        if objectPlayerShip.Health < 3 then --Spawn health only if the player is not at max health
+          powerup.spawnHealth(love.math.random(16,56), objectPlayerShip.y - 64)
+        else
+          powerup.spawnSpeed(love.math.random(16,56), objectPlayerShip.y - 64) --If the player is at full health when it picks health, spawn speed instead
+        end
+    end 
+    if powerupChoice == "invincible" then
+      powerup.spawnInvincibility(love.math.random(16,56), objectPlayerShip.y - 64)
+    end
+    powerupTimer = 0
+  end  
 
 	flux.update(dt)
   
-  flux.to(cam, camDelay*dt, {y = objectPlayerShip.y*-1})
-  if camDelay ~= 30 then
-    camDelay = 30
+  flux.to(cam, camDelay*dt, {y = (objectPlayerShip.y-5)*-1})
+  if camDelay ~= 10 then
+    camDelay = 10
   end
   if objectPlayerShip.isDead == false then
     asteroidTimerCount = asteroidTimerCount + 1*dt
@@ -97,6 +130,7 @@ function gameUpdate(dt) --Need this to be able to pause the game
 	objects.moveAsteroid(dt)
 	objects.rotateAsteroid(dt)
   objects.moveBullet(dt)
+  powerup.movePowerup(dt)
 	
 	if objectPlayerShip.iframe > 0 then
 		objectPlayerShip.iframe = objectPlayerShip.iframe - 1*dt
@@ -194,7 +228,13 @@ function game:draw()
     for i,v in ipairs(asteroidList) do
       love.graphics.draw(v.Sprite, v.x,v.y,v.Rotation,1,1,4,4)
     end
-    
+    for i,v in ipairs(powerupList) do
+      if v.Sprite == powerInvincible then
+        powerInvincibleAnimation:draw(powerInvincible,v.x,v.y,0,1,1,3,3)
+      else
+        love.graphics.draw(v.Sprite, v.x,v.y,0,1,1,3,3)
+      end
+    end    
     for i,v in ipairs(bulletList) do
       love.graphics.setColor( 1, 1, 1, 1)
       love.graphics.rectangle("fill", v.x,v.y,v.width,v.length)
@@ -263,7 +303,15 @@ function love.keypressed(key)
         asteroidList = {} --Clear all the asteroids
         bulletList = {} --Clear all the bullets if some still exist
         powerupList = {} --Clear all the bullets if some still exist
+        stateRestarting = true
         Gamestate.switch(game)
+      end
+      if key == "m" then --Go to main menu
+        camDelay = 0 --Temporarily set cam move time to 0 to prevent whipping on respawn
+        asteroidList = {} --Clear all the asteroids
+        bulletList = {} --Clear all the bullets if some still exist
+        powerupList = {} --Clear all the powerups if some still exist
+        Gamestate.switch(menu)
       end
     end
     
