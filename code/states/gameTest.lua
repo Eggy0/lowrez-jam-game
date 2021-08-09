@@ -137,6 +137,7 @@ function testGame:update(dt)
     testGameUpdate(dt)
   end
   audio.Update() --This is outside the pause function because the music needs to loop
+   powerInvincibleAnimation:update(dt)
 
 end
 
@@ -180,10 +181,12 @@ function testGame:draw()
       love.graphics.setColor( 1, 1, 1, 1)
     end
     for i,v in ipairs(powerupList) do
-      love.graphics.draw(v.Sprite, v.x,v.y)
-      love.graphics.setColor( 1, 0, 0, 1)
-      love.graphics.circle("line",v.x,v.y,4)
-      love.graphics.setColor( 1, 1, 1, 1)
+      if v.Sprite == powerInvincible then
+        powerInvincibleAnimation:draw(powerInvincible,v.x,v.y,0,1,1,3,3)
+      else
+        love.graphics.draw(v.Sprite, v.x,v.y,0,1,1,3,3)
+      end
+
     end
     
     for i,v in ipairs(bulletList) do

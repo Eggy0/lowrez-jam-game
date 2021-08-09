@@ -61,11 +61,11 @@ function objects.playerShipControls(deltaShip)
           end
           isMoving = true
       end
-      if love.keyboard.isDown("left") then
+      if love.keyboard.isDown("left") and objectPlayerShip.x > 6  then
           direction[1] = direction[1] - 1 -- Subtract 1 from x
           isMoving = true
       end
-      if love.keyboard.isDown("right") then
+      if love.keyboard.isDown("right") and objectPlayerShip.x < 58 then
           direction[1] = direction[1] + 1 -- Add 1 to x
           isMoving = true
       end

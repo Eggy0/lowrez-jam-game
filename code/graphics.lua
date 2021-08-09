@@ -39,7 +39,7 @@ function graphics.loadGraphics()
   powerGun = love.graphics.newImage("graphics/gameObjectGun.png")
   
   powerInvincibleGrid = anim8.newGrid(7,7,powerInvincible:getWidth(), powerInvincible:getHeight())
-	powerInvincibleAnimation = anim8.newAnimation(playerShipExplosionGrid('1-2',1),0.1)
+	powerInvincibleAnimation = anim8.newAnimation(powerInvincibleGrid('1-2',1),0.1)
 	
 end
 

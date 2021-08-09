@@ -79,23 +79,23 @@ function gameUpdate(dt) --Need this to be able to pause the game
     powerupChoice = chance.misc.weighted ({"speed","superspeed","permaspeed","health","invincible"}, {35,15,10,25,15})
     
     if powerupChoice == "speed" then
-      powerup.spawnSpeed(love.math.random(16,56), objectPlayerShip.y - 64)
+      powerup.spawnSpeed(love.math.random(8,56), objectPlayerShip.y - 64)
     end
     if powerupChoice == "superspeed" then
-      powerup.spawnSuperSpeed(love.math.random(16,56), objectPlayerShip.y - 64)
+      powerup.spawnSuperSpeed(love.math.random(8,56), objectPlayerShip.y - 64)
     end  
     if powerupChoice == "permaspeed" then
-      powerup.spawnPermaSpeed(love.math.random(16,56), objectPlayerShip.y - 64)
+      powerup.spawnPermaSpeed(love.math.random(8,56), objectPlayerShip.y - 64)
     end
     if powerupChoice == "health" then
         if objectPlayerShip.Health < 3 then --Spawn health only if the player is not at max health
-          powerup.spawnHealth(love.math.random(16,56), objectPlayerShip.y - 64)
+          powerup.spawnHealth(love.math.random(8,56), objectPlayerShip.y - 64)
         else
-          powerup.spawnSpeed(love.math.random(16,56), objectPlayerShip.y - 64) --If the player is at full health when it picks health, spawn speed instead
+          powerup.spawnSpeed(love.math.random(8,56), objectPlayerShip.y - 64) --If the player is at full health when it picks health, spawn speed instead
         end
     end 
     if powerupChoice == "invincible" then
-      powerup.spawnInvincibility(love.math.random(16,56), objectPlayerShip.y - 64)
+      powerup.spawnInvincibility(love.math.random(8,56), objectPlayerShip.y - 64)
     end
     powerupTimer = 0
   end  
@@ -184,6 +184,7 @@ function gameUpdate(dt) --Need this to be able to pause the game
   if -(objectPlayerShip.y/10)>objectPlayerShip.Score then
       objectPlayerShip.Score = -(objectPlayerShip.y/10)
   end
+   powerInvincibleAnimation:update(dt)
      
 end  
 
