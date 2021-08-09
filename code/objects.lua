@@ -19,7 +19,7 @@ function objects.spawnPlayerShip(playerShipX, playerShipY)
   objectPlayerShip.isDead = false
   objectPlayerShip.hitX = objectPlayerShip.x-1
   objectPlayerShip.hitY = objectPlayerShip.y-8
-  objectPlayerShip.hitW = 3
+  objectPlayerShip.hitW = 4
   objectPlayerShip.hitH = 8
   
 
@@ -129,11 +129,11 @@ function objects.policeFollow(deltaPolice)
     elseif objectPlayerShip.isDead == true then
       flux.to(objectPolice, 5, {x = objectPolice.onPlayerDeathX, y = objectPlayerShip.y + 96}):ease("linear"):delay(50*deltaPolice)
     end
-    if distance <= 48 and objectPlayerShip.isDead == false and (objectPolice.x >= objectPlayerShip.x - 4 or objectPolice.x <= objectPlayerShip.x + 4) then --Produce bullets when in range
+    if distance <= 40 and objectPlayerShip.isDead == false and (objectPolice.x >= objectPlayerShip.x - 4 or objectPolice.x <= objectPlayerShip.x + 4) then --Produce bullets when in range
         bulletTimerCount = bulletTimerCount + 1*deltaPolice
         if bulletTimerCount >= objectPolice.BulletTimer then
-          objects.spawnBullet(objectPolice.x-3, objectPolice.y-20)
-          objects.spawnBullet(objectPolice.x+3, objectPolice.y-20)
+          objects.spawnBullet(objectPolice.x-2, objectPolice.y-20)
+          objects.spawnBullet(objectPolice.x+2, objectPolice.y-20)
           soundPoliceBullet:play()
           bulletTimerCount = 0
         end

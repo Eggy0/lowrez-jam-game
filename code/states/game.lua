@@ -10,6 +10,7 @@ local isPaused = false
 local powerup = require('code/powerups')
 local chance = require('code/chance')
 local powerupTimer, powerupChoice = 0, nil
+chance.core.seed (love.math.random(4294967296))
 
 
 
@@ -310,13 +311,13 @@ function love.keypressed(key)
         stateRestarting = true
         Gamestate.switch(game)
       end
-      if key == "m" then --Go to main menu
+      --[[if key == "m" then --Go to main menu
         camDelay = 0 --Temporarily set cam move time to 0 to prevent whipping on respawn
         asteroidList = {} --Clear all the asteroids
         bulletList = {} --Clear all the bullets if some still exist
         powerupList = {} --Clear all the powerups if some still exist
         Gamestate.switch(menu)
-      end
+      end]]
     end
     
 
