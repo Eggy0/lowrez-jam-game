@@ -129,7 +129,7 @@ function objects.policeFollow(deltaPolice)
     elseif objectPlayerShip.isDead == true then
       flux.to(objectPolice, 5, {x = objectPolice.onPlayerDeathX, y = objectPlayerShip.y + 96}):ease("linear"):delay(50*deltaPolice)
     end
-    if distance <= 40 and objectPlayerShip.isDead == false and (objectPolice.x >= objectPlayerShip.x - 4 or objectPolice.x <= objectPlayerShip.x + 4) then --Produce bullets when in range
+    if distance <= 44 and objectPlayerShip.isDead == false and (objectPolice.x >= objectPlayerShip.x - 4 or objectPolice.x <= objectPlayerShip.x + 4) then --Produce bullets when in range
         bulletTimerCount = bulletTimerCount + 1*deltaPolice
         if bulletTimerCount >= objectPolice.BulletTimer then
           objects.spawnBullet(objectPolice.x-2, objectPolice.y-20)
