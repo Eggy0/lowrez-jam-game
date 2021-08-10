@@ -49,7 +49,7 @@ function love.update(dt)
 end
 
 function love.draw()
-  love.graphics.setCanvas()
+  love.graphics.setCanvas(canvas)
 	love.graphics.clear()
 
 end

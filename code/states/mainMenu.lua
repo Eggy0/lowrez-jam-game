@@ -7,6 +7,10 @@ local objectMain = {}
 	objectMain.x = 0
 	objectMain.y = 0
  
+function mainMenu:enter()
+
+    
+end
 
 function mainMenu:update(dt)
 	flux.update(dt)
@@ -15,10 +19,6 @@ end
 
 function mainMenu:draw()
   
-  love.graphics.setCanvas(canvas)
-  if love.graphics.getCanvas() == nil then
-      error("mainMenu:draw() was called but love's current canvas is nil.")
-  end
   love.graphics.draw(mainMenuGraphic , math.round(objectMain.x), math.round(objectMain.y))
   graphics.makeCanvas()
   

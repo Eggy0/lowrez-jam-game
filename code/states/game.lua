@@ -201,7 +201,6 @@ end
 
 function game:draw()
 	
-  
 	cam:push()
     --Debug test some hitboxes
 
