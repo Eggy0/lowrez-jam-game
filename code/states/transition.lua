@@ -22,8 +22,10 @@ end
 
 function transition:update(dt)
   if shipTrans.y <= -55 then
-    love.keypressed("return")
-    --return  Gamestate.switch(stateEntering,canvasMove)
+   --     love.graphics.setCanvas()
+   Gamestate.switch(stateEntering)
+   --love.keypressed("return")
+
   else
 
       flux.update(dt)
@@ -65,8 +67,9 @@ function transition:draw()
 end
 function transition:keypressed(key, code)
   if key == 'return'  then
+    love.keypressed(nil)
       --love.graphics.setCanvas(canvas)
-      Gamestate.switch(stateEntering)
+      --Gamestate.switch(stateEntering)
   end
 end
 return transition

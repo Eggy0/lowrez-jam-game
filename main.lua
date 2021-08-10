@@ -48,8 +48,11 @@ function love.update(dt)
     audio.Update() --This is outside the pause function because the music needs to loop
 end
 
-function love.draw()
+--[[function love.draw()
   love.graphics.setCanvas(canvas)
 	love.graphics.clear()
+  love.graphics.setCanvas()
 
-end
+  love.graphics.draw(canvas)
+
+end]]

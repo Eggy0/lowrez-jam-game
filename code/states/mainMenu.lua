@@ -18,7 +18,8 @@ function mainMenu:update(dt)
 end
 
 function mainMenu:draw()
-  
+   love.graphics.setCanvas(canvas)
+	love.graphics.clear()
   love.graphics.draw(mainMenuGraphic , math.round(objectMain.x), math.round(objectMain.y))
   graphics.makeCanvas()
   

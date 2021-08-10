@@ -200,7 +200,8 @@ end
 
 
 function game:draw()
-	
+	 love.graphics.setCanvas(canvas)
+	love.graphics.clear()
 	cam:push()
     --Debug test some hitboxes
 
