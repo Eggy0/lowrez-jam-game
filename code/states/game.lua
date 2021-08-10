@@ -195,7 +195,6 @@ function game:update(dt)
   if isPaused == false then
     gameUpdate(dt)
   end
-  audio.Update() --This is outside the pause function because the music needs to loop
 
 end
 

@@ -22,7 +22,7 @@ end
 
 function transition:update(dt)
    if shipTrans.y <= -55 then
-    return Gamestate.switch(stateEntering)
+   return Gamestate.switch(stateEntering)
   end
 
   flux.update(dt)
@@ -45,7 +45,8 @@ function transition:draw()
   love.graphics.setStencilTest("greater", 0)
   
   if stateEntering == mainMenu then
-      stateEntering:draw()
+      love.graphics.draw(mainMenuGraphic, 0, 0)
+       graphics.makeCanvas()
   elseif stateEntering == game then
       gameBackgroundAnimation:draw(gameBackgroundTest,0,32)
       gameBackgroundAnimation:draw(gameBackgroundTest,0,32-64)
@@ -60,8 +61,9 @@ function transition:draw()
   
 end
 function transition:keypressed(key, code)
-  if key == 'return'  then    
-      Gamestate.switch(stateEntering)
+  if key == 'return'  then
+      --love.graphics.setCanvas(canvas)
+      --Gamestate.switch(stateEntering)
   end
 end
 return transition

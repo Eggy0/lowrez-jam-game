@@ -1,5 +1,9 @@
 local menu = {}
 
+function menu:enter()
+    audio.setTrack(audio.Track2)
+    audio.loadedTrack:play() 
+end
 
 function menu:draw()
     love.graphics.setCanvas(canvas)

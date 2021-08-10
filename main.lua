@@ -44,6 +44,10 @@ function love.load()
 	--Gamestate.switch(transition)
 end
 
+function love.update(dt)
+    audio.Update() --This is outside the pause function because the music needs to loop
+end
+
 function love.draw()
   love.graphics.setCanvas()
 	love.graphics.clear()

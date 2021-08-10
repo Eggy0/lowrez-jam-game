@@ -5,7 +5,8 @@ audio.position = 0
 --Time units are in samples.
 
 audio.Track1 = {Source = love.audio.newSource('audio/bg/track1.ogg',"stream"),JumpBackTo = 144879,LoopPosition = 2543784}
-audio.Track2 = {Source = love.audio.newSource('audio/bg/restoring_the_light_facing_the_dark_8-bit.ogg',"stream"),JumpBackTo = 26956,LoopPosition = 6939039}
+audio.Track2 = {Source = love.audio.newSource('audio/bg/track2.ogg',"stream"),JumpBackTo = 3665,LoopPosition = 826961}
+audio.Track0 = {Source = love.audio.newSource('audio/bg/restoring_the_light_facing_the_dark_8-bit.ogg',"stream"),JumpBackTo = 26956,LoopPosition = 6939039}
 
 
 soundExplosion = love.audio.newSource('audio/sfx/sfx1.wav',"static")
