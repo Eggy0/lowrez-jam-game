@@ -1,6 +1,7 @@
 local transition = {}
 
-
+function love.load()
+end
 function transition:enter(stateLeaving,stateEntering)
 love.graphics.setDefaultFilter('nearest', 'nearest')
 
@@ -20,15 +21,13 @@ local function stateWeAreEntering()
 end
 
 function transition:update(dt)
+   if shipTrans.y <= -55 then
+    return Gamestate.switch(stateEntering)
+  end
+
   flux.update(dt)
   flux.to(shipTrans, 1.5, {y = -70})
   polygonVertices = {shipTrans.x-1, shipTrans.y+1, shipTrans.x+2, shipTrans.y+1,shipTrans.x+40, shipTrans.y+60,shipTrans.x+40, shipTrans.y+150,shipTrans.x-40, shipTrans.y+150,shipTrans.x-40, shipTrans.y+60}
-
- if shipTrans.y <= -55 then
-   -- Gamestate.registerEvents()
-    --Gamestate.switch(stateEntering)
-  end
-
 end
 
 function transition:draw()

@@ -24,6 +24,8 @@ function mainMenu:draw()
 end
 
 function mainMenu:keypressed(key, code)
+  love.graphics.setCanvas(canvas)
+  love.graphics.clear()
     if key == 'return' and selectionX == 0 then
         --Gamestate.switch(game)
       stateLeaving = Gamestate.current()
