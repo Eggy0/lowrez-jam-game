@@ -45,7 +45,7 @@ function love.load()
 end
 
 function love.draw()
-	--love.graphics.setCanvas(canvas)
-	--love.graphics.clear()
+	love.graphics.setCanvas(canvas)
+	love.graphics.clear()
 
 end

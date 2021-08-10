@@ -295,7 +295,7 @@ function game:draw()
       love.graphics.setFont(defaultFont)
       love.graphics.printf("YOU DIED\n\nPRESS R TO\nRESPAWN",7,16,50,"center")
     end
-    --graphics.makeCanvas()
+    graphics.makeCanvas()
 	
 end
 
@@ -312,13 +312,16 @@ function love.keypressed(key)
         stateRestarting = true
         Gamestate.switch(game)
       end
-      --[[if key == "m" then --Go to main menu
+      if key == "m" then --Go to main menu
         camDelay = 0 --Temporarily set cam move time to 0 to prevent whipping on respawn
         asteroidList = {} --Clear all the asteroids
         bulletList = {} --Clear all the bullets if some still exist
         powerupList = {} --Clear all the powerups if some still exist
-        Gamestate.switch(menu)
-      end]]
+        stateLeaving = Gamestate.current()
+        stateEntering = mainMenu
+        Gamestate.switch(transition,stateLeaving,stateEntering)
+      end
+      
     end
     
 

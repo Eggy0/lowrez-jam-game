@@ -6,6 +6,7 @@ function menu:draw()
 	love.graphics.clear()
     love.graphics.draw(titleScreen, 0, 0)
 		graphics.makeCanvas()
+    
 end
 
 function menu:keyreleased(key)
@@ -13,6 +14,7 @@ function menu:keyreleased(key)
       stateLeaving = Gamestate.current()
       stateEntering = mainMenu
       Gamestate.switch(transition,stateLeaving,stateEntering)
+     -- Gamestate.switch(mainMenu)
     end
 end
 

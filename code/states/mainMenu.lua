@@ -2,7 +2,7 @@ local mainMenu = {}
 local selectionX = 0
 local selectionY = 0
 	
-	mainMenuGraphic = love.graphics.newImage('graphics/gameAssetMainMenu.png')
+mainMenuGraphic = love.graphics.newImage('graphics/gameAssetMainMenu.png')
 
 local objectMain = {}
 	objectMain.Sprite = mainMenuGraphic
@@ -15,14 +15,20 @@ function mainMenu:update(dt)
 end
 
 function mainMenu:draw()
-
+  if love.graphics.getCanvas() == nil then
+      error("mainMenu:draw() was called but love's current canvas is nil.")
+  end
   love.graphics.draw(objectMain.Sprite, math.round(objectMain.x), math.round(objectMain.y))
-	--graphics.makeCanvas()
+  graphics.makeCanvas()
+
 end
 
 function mainMenu:keypressed(key, code)
     if key == 'return' and selectionX == 0 then
-        Gamestate.switch(game)
+        --Gamestate.switch(game)
+      stateLeaving = Gamestate.current()
+      stateEntering = game
+      Gamestate.switch(transition,stateLeaving,stateEntering)
     end
 	if key == 'right' then 
 		if selectionY == 0 and selectionX > -128 then
