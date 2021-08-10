@@ -1,0 +1,8 @@
+name = "SpaceDisgrace"
+default_targets = ["win32", "win64"]
+build_directory = "d:\\make"
+
+love_files = [
+    "::git-ls-tree::",
+    "-*/.*",
+]
