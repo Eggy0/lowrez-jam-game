@@ -37,7 +37,7 @@ function transition:draw()
   
   --stateLeaving:draw()
   
-  love.graphics.draw(playerShip,shipTrans.x,shipTrans.y,0,1,1,4,8)
+ 
  
   
   love.graphics.setCanvas({canvas, stencil=true})  
@@ -48,6 +48,7 @@ function transition:draw()
   stateEntering:draw()
   
   love.graphics.setStencilTest()
+   love.graphics.draw(playerShip,shipTrans.x,shipTrans.y,0,1,1,4,8)
   love.graphics.setCanvas()
   love.graphics.clear()
   love.graphics.draw(canvas)
