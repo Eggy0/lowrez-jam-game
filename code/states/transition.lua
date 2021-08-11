@@ -3,14 +3,14 @@ local transition = {}
 
 function transition:enter(stateLeaving,stateEntering)
   love.graphics.setDefaultFilter('nearest', 'nearest')
-
+  soundTransition:play()
   prevState = love.graphics.newImage(canvas:newImageData())
 
   shipTrans = {}
   shipTrans.x = 31
   shipTrans.y = 80
 
-
+  musicFade = musicVolume
 end
 
 local function stateWeAreLeaving()
@@ -21,7 +21,15 @@ local function stateWeAreEntering()
 end
 
 function transition:update(dt)
-  if shipTrans.y <= -55 then
+  if musicFade > 0 then
+    musicFade = musicFade -2.5*dt
+  end  
+  audio.loadedTrack:setVolume(musicFade)
+      if musicFade <= 0 then
+        audio.loadedTrack:stop()
+      end
+  
+  if shipTrans.y <= -50 then
    --     love.graphics.setCanvas()
    Gamestate.switch(stateEntering)
    --love.keypressed("return")
@@ -29,7 +37,7 @@ function transition:update(dt)
   else
 
       flux.update(dt)
-      flux.to(shipTrans, 1.5, {y = -70})
+      flux.to(shipTrans, 1, {y = -70})
       polygonVertices = {shipTrans.x-1, shipTrans.y+1, shipTrans.x+2, shipTrans.y+1,shipTrans.x+40, shipTrans.y+60,shipTrans.x+40, shipTrans.y+150,shipTrans.x-40, shipTrans.y+150,shipTrans.x-40, shipTrans.y+60}
   end
 end

@@ -11,6 +11,10 @@ audio.Track0 = {Source = love.audio.newSource('audio/bg/restoring_the_light_faci
 
 soundExplosion = love.audio.newSource('audio/sfx/sfx1.wav',"static")
 soundPoliceBullet = love.audio.newSource('audio/sfx/sfx2.wav',"static")
+soundPowerup = love.audio.newSource('audio/sfx/sfx3.wav',"static")
+soundHurt = love.audio.newSource('audio/sfx/sfx4.wav',"static")
+soundTransition = love.audio.newSource('audio/sfx/sfx5.wav',"static")
+soundThruster = {Source = love.audio.newSource('audio/sfx/sfx6.wav',"static"),JumpBackTo = 9455,LoopPosition = 51590}
 
 
 
@@ -20,14 +24,31 @@ function audio.setTrack (nameOfTrack)
 	audio.loopEnd = nameOfTrack.LoopPosition
 end
 
+function love.keypressed(key)
+  if key == "up" and Gamestate.current()==game and objectPlayerShip.isDead == false then
+    soundThruster.Source:play()
+  end
+  
+end
 function audio.Update()
-	audio.position = audio.loadedTrack:tell("samples")
+  
+  audio.loadedTrack:setVolume(musicVolume)
+  audio.position = audio.loadedTrack:tell("samples")
 	if audio.position >= audio.loopEnd then
 		audio.loadedTrack:seek(audio.position - (audio.loopEnd-audio.loopStart),"samples")
 	end
+  if love.keyboard.isDown("up") and Gamestate.current()==game  then
+    audio.thrusterPosition = soundThruster.Source:tell("samples")
+    if audio.thrusterPosition >= soundThruster.LoopPosition then
+      soundThruster.Source:seek(audio.thrusterPosition - (soundThruster.LoopPosition-soundThruster.JumpBackTo),"samples")
+    end
+  end  
 end
 
-
-
+function love.keyreleased(key)
+  if key == "up" and Gamestate.current()==game then
+    soundThruster.Source:seek(soundThruster.LoopPosition)
+  end
+end
 
 return audio

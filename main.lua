@@ -5,8 +5,10 @@ Gamestate = require ("code/gamestate")
 anim8 = require ("code/anim8")
 flux = require("code/flux")
 Camera = require("code/camera")
+
 local resolutionTest, resolutionTestAnimation
 stateLeft, stateEntering = nil, nil
+musicVolume = 1
 
 
 menu = require("code/states/test1")

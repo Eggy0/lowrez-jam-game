@@ -117,7 +117,7 @@ function objects.spawnPolice(policeX, policeY) --The police ship will always fol
 	objectPolice.Velocity = 5
 	objectPolice.x = policeX
 	objectPolice.y = policeY
-  objectPolice.BulletTimer = 0.35
+  objectPolice.BulletTimer = 0.4
   objectPolice.onPlayerDeathX = onPlayerDeathX[love.math.random(#onPlayerDeathX)]
   
   
@@ -138,7 +138,9 @@ function objects.policeFollow(deltaPolice)
           bulletTimerCount = 0
         end
     end
-    
+    if objectPolice.Velocity > objectPlayerShip.Velocity + 5 then
+        objectPolice.Velocity = objectPlayerShip.Velocity + 5
+    end
     if CheckCollision(objectPlayerShip.hitX,objectPlayerShip.hitY,objectPlayerShip.hitW,objectPlayerShip.hitH, objectPolice.x-3,objectPolice.y-18,7,19) or CheckCollision(objectPlayerShip.hitX,objectPlayerShip.hitY,objectPlayerShip.hitW,objectPlayerShip.hitH, objectPolice.x-16,objectPolice.y-10,34,10) then
         objectPlayerShip.Health = 0
     end 

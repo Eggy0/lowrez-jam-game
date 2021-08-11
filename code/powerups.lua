@@ -1,7 +1,7 @@
 local powerup = {}
 local powerupEffects = {"speed up", "health up", "invincible", "special"}
 powerupList = {}
-powerupTimer = 0
+powerupTimeValue = 0
 powerupFlag = false
 powerupActive = false
 powerupSpeedValue = 0
@@ -73,16 +73,16 @@ end
 
 
 function powerup.movePowerup(deltaPower)
-    if powerupTimer < 0 then
-        powerupTimer = 0
+    if powerupTimeValue < 0 then
+        powerupTimeValue = 0
         if powerupSpeedValue ~= 0 then
             powerupSpeedValue = powerupOriginalSpeedValue
             objectPlayerShip.Velocity = powerupSpeedValue
             powerupFlag = true
         end  
     end
-    if powerupTimer > 0 then
-        powerupTimer = powerupTimer - 1*deltaPower
+    if powerupTimeValue > 0 then
+        powerupTimeValue = powerupTimeValue - 1*deltaPower
         powerupActive = true
     else
         powerupActive = false
@@ -93,7 +93,7 @@ function powerup.movePowerup(deltaPower)
     end
     for i,v in ipairs(powerupList) do
 			v.y = v.y + v.Velocity*deltaPower
-      if circleRectangleIntersect(v.x,v.y, 4,objectPlayerShip.hitX,objectPlayerShip.hitY,objectPlayerShip.hitW,objectPlayerShip.hitH) then
+      if circleRectangleIntersect(v.x,v.y, 4,objectPlayerShip.hitX,objectPlayerShip.hitY,objectPlayerShip.hitW,objectPlayerShip.hitH) and objectPlayerShip.isDead == false then
         if v.Effect == "speed up" then
           if v.Time >= 0 then
             if powerupActive == false then
@@ -103,7 +103,7 @@ function powerup.movePowerup(deltaPower)
               poweruppeedValue = powerupOriginalSpeedValue
               powerupSpeedValue = powerupOriginalSpeedValue + v.Value
             end  
-            powerupTimer = v.Time
+            powerupTimeValue = v.Time
             powerupFlag = true
           else
             objectPlayerShip.Velocity = objectPlayerShip.Velocity + v.Value
@@ -116,6 +116,12 @@ function powerup.movePowerup(deltaPower)
         if v.Effect == "invincible" then
             objectPlayerShip.iframe = v.Value
         end
+        soundPowerup:play()
+        powerupMeter.Time = v.Time
+        powerupMeter.y = 32
+        table.remove(powerupList,i)
+      end
+      if v.y > objectPlayerShip.y + 64 then
         table.remove(powerupList,i)
       end
 		end
