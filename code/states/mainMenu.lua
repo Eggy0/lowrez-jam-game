@@ -9,7 +9,7 @@ local objectMain = {}
  
 function mainMenu:enter()
 
-        audio.setTrack(audio.Track2)
+    audio.setTrack(audio.Track3)
     audio.loadedTrack:play() 
 end
 

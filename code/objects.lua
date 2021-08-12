@@ -199,7 +199,7 @@ function objects.spawnAsteroid(asteroidX, asteroidY,asteroidVelocityX)
 	objectAsteroid.Rotation = love.math.random(0,10)
 	objectAsteroid.VelocityX = asteroidVelocityX or love.math.random(15,40)
 	objectAsteroid.VelocityY = 0
-  objectAsteroid.offsetX = 5
+  objectAsteroid.offsetX = 4
   objectAsteroid.offsetY = 4
   objectAsteroid.radius = 4
 	table.insert(asteroidList,objectAsteroid)
@@ -231,7 +231,7 @@ end
 function objects.spawnMedAsteroid(asteroidX, asteroidY,asteroidVelocityX)
   objectMedAsteroid = {}
   
-	objectMedAsteroid.Sprite = asteroidGraphics[love.math.random(#asteroidGraphics)]
+	objectMedAsteroid.Sprite = asteroidMedGraphics[love.math.random(#asteroidMedGraphics)]
 	objectMedAsteroid.x = asteroidX
 	objectMedAsteroid.y = asteroidY
 	
@@ -242,13 +242,13 @@ function objects.spawnMedAsteroid(asteroidX, asteroidY,asteroidVelocityX)
 	end
 	
   objectMedAsteroid.SpinDir = asteroidSpinningDir[love.math.random(#asteroidSpinningDir)]
-  objectMedAsteroid.SpinVel = love.math.random(0,10)
+  objectMedAsteroid.SpinVel = love.math.random(0,4)
 	objectMedAsteroid.Rotation = love.math.random(0,10)
 	objectMedAsteroid.VelocityX = asteroidVelocityX or love.math.random(15,40)
 	objectMedAsteroid.VelocityY = 0
-  objectMedAsteroid.offsetX = 5
-  objectMedAsteroid.offsetY = 4
-  objectMedAsteroid.radius = 1
+  objectMedAsteroid.offsetX = 6
+  objectMedAsteroid.offsetY = 6
+  objectMedAsteroid.radius = 6
 	table.insert(asteroidList,objectMedAsteroid)
 
 end

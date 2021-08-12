@@ -26,6 +26,12 @@ function graphics.loadGraphics()
 	table.insert(asteroidGraphics,love.graphics.newImage('graphics/gameObjectAsteroid6.png'))
   table.insert(asteroidGraphics,love.graphics.newImage('graphics/gameObjectAsteroid7.png'))
   
+  asteroidMedGraphics = {}
+  table.insert(asteroidMedGraphics,love.graphics.newImage('graphics/gameObjectMedAsteroid1.png'))
+	table.insert(asteroidMedGraphics,love.graphics.newImage('graphics/gameObjectMedAsteroid2.png'))
+	table.insert(asteroidMedGraphics,love.graphics.newImage('graphics/gameObjectMedAsteroid3.png'))
+  table.insert(asteroidMedGraphics,love.graphics.newImage('graphics/gameObjectMedAsteroid4.png'))
+  
   gameBackgroundTest = love.graphics.newImage("graphics/gameplay_background_test.png")
 	gameBackgroundGrid = anim8.newGrid(64,64,gameBackgroundTest:getWidth(), gameBackgroundTest:getHeight())
 	gameBackgroundAnimation = anim8.newAnimation(gameBackgroundGrid('1-7',1),0.1)

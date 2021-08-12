@@ -6,7 +6,8 @@ audio.position = 0
 
 audio.Track1 = {Source = love.audio.newSource('audio/bg/track1.ogg',"stream"),JumpBackTo = 144879,LoopPosition = 2543784}
 audio.Track2 = {Source = love.audio.newSource('audio/bg/track2.ogg',"stream"),JumpBackTo = 3665,LoopPosition = 826961}
-audio.Track0 = {Source = love.audio.newSource('audio/bg/restoring_the_light_facing_the_dark_8-bit.ogg',"stream"),JumpBackTo = 26956,LoopPosition = 6939039}
+audio.Track3 = {Source = love.audio.newSource('audio/bg/track3.ogg',"stream"),JumpBackTo = 3665,LoopPosition = 1101873}
+audio.Track0 = {Source = love.audio.newSource('audio/bg/restoring_the_light_facing_the_dark_8-bit.ogg',"stream"),JumpBackTo = 12405,LoopPosition = 3188075}
 
 
 soundExplosion = love.audio.newSource('audio/sfx/sfx1.wav',"static")
@@ -24,12 +25,9 @@ function audio.setTrack (nameOfTrack)
 	audio.loopEnd = nameOfTrack.LoopPosition
 end
 
-function love.keypressed(key)
-  if key == "up" and Gamestate.current()==game and objectPlayerShip.isDead == false then
-    soundThruster.Source:play()
-  end
+
   
-end
+
 function audio.Update()
   
   audio.loadedTrack:setVolume(musicVolume)

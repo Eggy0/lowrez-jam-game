@@ -100,7 +100,7 @@ function powerup.movePowerup(deltaPower)
               powerupOriginalSpeedValue = objectPlayerShip.Velocity
               powerupSpeedValue = objectPlayerShip.Velocity + v.Value
             elseif powerupActive == true and powerupSpeedValue ~= v.Value then
-              poweruppeedValue = powerupOriginalSpeedValue
+              powerupSpeedValue = powerupOriginalSpeedValue
               powerupSpeedValue = powerupOriginalSpeedValue + v.Value
             end  
             powerupTimeValue = v.Time
@@ -115,9 +115,10 @@ function powerup.movePowerup(deltaPower)
         end
         if v.Effect == "invincible" then
             objectPlayerShip.iframe = v.Value
+            powerupTimeValue = v.Value
         end
         soundPowerup:play()
-        powerupMeter.Time = v.Time
+        powerupMeter.Time = powerupTimeValue
         powerupMeter.y = 32
         table.remove(powerupList,i)
       end

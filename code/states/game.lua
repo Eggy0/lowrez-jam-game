@@ -9,8 +9,18 @@ local camDelay = 10
 local isPaused = false
 local powerup = require('code/powerups')
 local chance = require('code/chance')
-local powerupTimer, powerupChoice = 0, nil
+local powerupTimer, powerupChoice, asteroidChoice = 0, nil, nil
 chance.core.seed (love.math.random(4294967296))
+
+konami.newCode({"up", "up", "down", "down", "left", "right", "left", "right", "b", "a"}, 
+  function() 
+    if isPaused == true and easterEggActive == false then
+    audio.loadedTrack:stop() --Stop the track if it's already playing
+    audio.setTrack(audio.Track0)
+    audio.loadedTrack:play()
+    easterEggActive = true
+    end
+    end)
 
 
 
@@ -46,6 +56,7 @@ function game:enter()
 
   powerupMeter = {}
   powerupMeter.y, powerupMeter.Time = 0, 0
+
   
   deathFinished = false --So the death sound only plays once
   
@@ -67,6 +78,9 @@ function game:enter()
     end
     audio.setTrack(audio.Track1)
     audio.loadedTrack:play() 
+    flyLabel = chance.misc.weighted ({"FLY UP", "FLY MY PRETTY!!"}, {95,5})
+    keyPressed = false
+    easterEggActive = false
   end
   stateRestarting = false
 
@@ -77,7 +91,7 @@ end
 
 function gameUpdate(dt) --Need this to be able to pause the game
   
-  
+  konami.update(dt)
   distance = distanceFrom(objectPlayerShip.x,objectPlayerShip.y,objectPolice.x,objectPolice.y)
   shipScreenX, shipScreenY = cam:getScreenCoordinates(objectPolice.x, objectPolice.y)
   powerupTimer = powerupTimer + 1*dt
@@ -112,13 +126,23 @@ function gameUpdate(dt) --Need this to be able to pause the game
   if camDelay ~= 10 then
     camDelay = 10
   end
-  if objectPlayerShip.isDead == false then
     asteroidTimerCount = asteroidTimerCount + 1*dt
-    if asteroidTimerCount >= asteroidTimer then
-       objects.spawnAsteroid(asteroidRandomX[love.math.random(#asteroidRandomX)], objectPlayerShip.y-love.math.random(32,64),love.math.random(20+(objectPlayerShip.Velocity/5),50+(objectPlayerShip.Velocity/5)))
+  if asteroidTimerCount >= asteroidTimer and objectPlayerShip.isDead == false and objectPlayerShip.y <= -64 then
+        asteroidChoice = chance.misc.weighted ({"normal", "medium"}, {65,35})
+        if asteroidChoice == "normal" then
+          objects.spawnAsteroid(asteroidRandomX[love.math.random(#asteroidRandomX)], objectPlayerShip.y-love.math.random(32,64),love.math.random(20+(objectPlayerShip.Velocity/5),50+(objectPlayerShip.Velocity/5)))
+        end
+        if asteroidChoice == "medium" then
+            if objectPlayerShip.Score >= 400 then
+                        objects.spawnMedAsteroid(love.math.random(12,52), objectPlayerShip.y-love.math.random(48,72),love.math.random(5,15))
+            elseif objectPlayerShip.Score < 400 then
+              objects.spawnAsteroid(asteroidRandomX[love.math.random(#asteroidRandomX)], objectPlayerShip.y-love.math.random(32,64),love.math.random(20+(objectPlayerShip.Velocity/5),50+(objectPlayerShip.Velocity/5)))
+            end
+        end
+
        asteroidTimerCount = 0
        asteroidTimer = love.math.random(0.2,3) 
-    end    
+      
   end
   
 	objects.playerShipControls(dt)
@@ -196,6 +220,7 @@ function gameUpdate(dt) --Need this to be able to pause the game
    powerInvincibleAnimation:update(dt)
    
   flux.to(powerupMeter, powerupMeter.Time, {y = 0})
+
 end  
 
 function game:update(dt)
@@ -237,7 +262,7 @@ function game:draw()
   
 	
     for i,v in ipairs(asteroidList) do
-      love.graphics.draw(v.Sprite, v.x,v.y,v.Rotation,1,1,4,4)
+      love.graphics.draw(v.Sprite, v.x,v.y,v.Rotation,1,1,v.offsetX,v.offsetY)
     end
     for i,v in ipairs(powerupList) do
       if v.Sprite == powerInvincible then
@@ -268,6 +293,10 @@ function game:draw()
     love.graphics.print(string.format("%06d",objectPlayerShip.Score),28,1)
     if objectPlayerShip.isDead == false then
     
+      if keyPressed == false and isPaused == false then
+      love.graphics.setFont(defaultFont)
+      love.graphics.printf(flyLabel,7,16,50,"center")        
+      end
       --love.graphics.print(objectPolice.Velocity,32,8)
       --love.graphics.print(audio.loopStart,8,8)
       --love.graphics.print(audio.position,8,16)
@@ -315,6 +344,7 @@ end
 
 
 function game:keypressed(key)
+    konami.keypressed(key)
     if isPaused == false then  
       if key == "r" then --Reset the state
         camDelay = 0 --Temporarily set cam move time to 0 to prevent whipping on respawn
@@ -334,14 +364,23 @@ function game:keypressed(key)
         stateEntering = mainMenu
         Gamestate.switch(transition,stateLeaving,stateEntering)
       end
+      if key =="up" and objectPlayerShip.isDead == false then
+        keyPressed = true
+        soundThruster.Source:play()
+      end
+    
+    
       
     end
     
 
   if key == "p" and isPaused == false and objectPlayerShip.isDead == false then
-        soundThruster.Source:pause()
+      soundThruster.Source:pause()
       isPaused = true
   elseif key == "p" and isPaused == true and objectPlayerShip.isDead == false then
+      if love.keyboard.isDown("up") then
+          soundThruster.Source:play()
+      end
       isPaused = false
   end
 end

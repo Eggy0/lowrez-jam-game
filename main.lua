@@ -5,6 +5,7 @@ Gamestate = require ("code/gamestate")
 anim8 = require ("code/anim8")
 flux = require("code/flux")
 Camera = require("code/camera")
+konami = require("code/konami")
 
 local resolutionTest, resolutionTestAnimation
 stateLeft, stateEntering = nil, nil
