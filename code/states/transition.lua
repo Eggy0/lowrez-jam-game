@@ -57,7 +57,7 @@ function transition:draw()
     love.graphics.setStencilTest("greater", 0)
     
     if stateEntering == mainMenu then
-        love.graphics.draw(mainMenuGraphic, 0, 0)
+        love.graphics.draw(mainMenuGraphic, 0, -64)
          graphics.makeCanvas()
     elseif stateEntering == game then
         gameBackgroundAnimation:draw(gameBackgroundTest,0,32)

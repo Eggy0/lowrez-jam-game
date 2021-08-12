@@ -8,6 +8,8 @@ function graphics.loadGraphics()
 
 	titleScreen = love.graphics.newImage('graphics/gameAssetTitleScreenTest.png')
   mainMenuGraphic = love.graphics.newImage('graphics/gameAssetMainMenu.png')
+  menuArrowLeft = love.graphics.newImage('graphics/gameAssetMainMenuArrowLeft.png')
+  menuArrowRight = love.graphics.newImage('graphics/gameAssetMainMenuArrowRight.png')
 	
 	playerShip = love.graphics.newImage('graphics/gameObjectShip.png')
 	playerShipThruster = love.graphics.newImage('graphics/gameObjectShipThruster.png')
