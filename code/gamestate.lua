@@ -101,13 +101,10 @@ end
 setmetatable(GS, {__index = function(_, func)
 	-- call function only if at least one 'update' was called beforehand
 	-- (see issue #46)
-	if not state_is_dirty or func == 'update' then
-		state_is_dirty = false
-		return function(...)
-			return (stack[#stack][func] or __NULL__)(stack[#stack], ...)
-		end
+	state_is_dirty = false
+	return function(...)
+		return (stack[#stack][func] or __NULL__)(stack[#stack], ...)
 	end
-	return __NULL__
 end})
 
 return GS

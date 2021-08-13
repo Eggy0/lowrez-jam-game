@@ -1,10 +1,11 @@
 
 
 function love.conf(t)	
-	t.window.title = "Lowrez jam game"  --WIP Title
+	t.window.title = "Space Disgrace"  --WIP Title
 	t.appendidentity = "Identity"       -- Search files in source directory before save directory (boolean)
     t.version = "11.3"                  -- The LÖVE version this game was made for (string)
     t.console = false                   -- Attach a console (boolean, Windows only)
+    t.window.icon = 'graphics/gameObjectShip.png'
     
     t.window.width = 200               -- The window width (number)
     t.window.height = 200

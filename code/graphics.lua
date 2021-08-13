@@ -7,7 +7,13 @@ local canvas_height = 64
 function graphics.loadGraphics()
 
 	titleScreen = love.graphics.newImage('graphics/gameAssetTitleScreenTest.png')
-
+  mainMenuGraphic = love.graphics.newImage('graphics/gameAssetMainMenu.png')
+  menuArrowLeft = love.graphics.newImage('graphics/gameAssetMainMenuArrowLeft.png')
+  menuArrowRight = love.graphics.newImage('graphics/gameAssetMainMenuArrowRight.png')
+ 
+  menuHelpControls = love.graphics.newImage('graphics/gameAssetHelpControls.png')
+  menuHelpControlsGrid = anim8.newGrid(32,16,menuHelpControls:getWidth(), menuHelpControls:getHeight())
+	menuHelpControlsAnimation = anim8.newAnimation(menuHelpControlsGrid('1-2',1),2)
 	
 	playerShip = love.graphics.newImage('graphics/gameObjectShip.png')
 	playerShipThruster = love.graphics.newImage('graphics/gameObjectShipThruster.png')
@@ -16,11 +22,22 @@ function graphics.loadGraphics()
   
   playerIcon = love.graphics.newImage('graphics/gameObjectShipIcon.png')
   policeIcon = love.graphics.newImage('graphics/gameObjectPoliceIcon.png')
+  selection = love.graphics.newImage('graphics/gameAssetSelection.png')
 	
 	asteroidGraphics = {}
 	table.insert(asteroidGraphics,love.graphics.newImage('graphics/gameObjectAsteroid1.png'))
 	table.insert(asteroidGraphics,love.graphics.newImage('graphics/gameObjectAsteroid2.png'))
 	table.insert(asteroidGraphics,love.graphics.newImage('graphics/gameObjectAsteroid3.png'))
+  table.insert(asteroidGraphics,love.graphics.newImage('graphics/gameObjectAsteroid4.png'))
+	table.insert(asteroidGraphics,love.graphics.newImage('graphics/gameObjectAsteroid5.png'))
+	table.insert(asteroidGraphics,love.graphics.newImage('graphics/gameObjectAsteroid6.png'))
+  table.insert(asteroidGraphics,love.graphics.newImage('graphics/gameObjectAsteroid7.png'))
+  
+  asteroidMedGraphics = {}
+  table.insert(asteroidMedGraphics,love.graphics.newImage('graphics/gameObjectMedAsteroid1.png'))
+	table.insert(asteroidMedGraphics,love.graphics.newImage('graphics/gameObjectMedAsteroid2.png'))
+	table.insert(asteroidMedGraphics,love.graphics.newImage('graphics/gameObjectMedAsteroid3.png'))
+  table.insert(asteroidMedGraphics,love.graphics.newImage('graphics/gameObjectMedAsteroid4.png'))
   
   gameBackgroundTest = love.graphics.newImage("graphics/gameplay_background_test.png")
 	gameBackgroundGrid = anim8.newGrid(64,64,gameBackgroundTest:getWidth(), gameBackgroundTest:getHeight())
@@ -46,10 +63,11 @@ end
 
 function graphics.makeCanvas()
     love.graphics.setCanvas()
-    love.graphics.clear()
+    --love.graphics.clear()
     love.graphics.scale(love.graphics.getWidth() / canvas_width, love.graphics.getHeight() / canvas_height)
     love.graphics.draw(canvas)
 end
+
 
 return graphics
 

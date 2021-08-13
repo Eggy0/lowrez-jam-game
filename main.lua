@@ -5,9 +5,14 @@ Gamestate = require ("code/gamestate")
 anim8 = require ("code/anim8")
 flux = require("code/flux")
 Camera = require("code/camera")
+konami = require("code/konami")
+local joykey = "none"
+
 local resolutionTest, resolutionTestAnimation
+stateLeft, stateEntering = nil, nil
+musicVolume = 1
 
-
+splash = require("code/states/splash")
 menu = require("code/states/test1")
 test = require("code/states/testFont")
 
@@ -21,7 +26,7 @@ transition = require("code/states/transition")
 function love.load()
   love.graphics.setDefaultFilter('nearest', 'nearest')
 	scoreFont = love.graphics.newImageFont('graphics/gameplayFont.png', '0123456789',1)
-  defaultFont = love.graphics.newImageFont('graphics/defaultFont.png',' ?!.,-ABCDEFGHIJKLMNOPQRSTUVWXYZ',-1)
+  defaultFont = love.graphics.newImageFont('graphics/defaultFont.png',' ?!.,-ABCDEFGHIJKLMNOPQRSTUVWXYZ()0',-1)
 
 
 
@@ -34,16 +39,28 @@ function love.load()
 
 	canvas = love.graphics.newCanvas(canvas_width, canvas_height)
 	canvas:setFilter("nearest","nearest")
+  
 
 	
 	graphics.loadGraphics()
 	Gamestate.registerEvents()
-    --Gamestate.switch(menu)
-	Gamestate.switch(transition)
+  Gamestate.switch(splash)
+	--Gamestate.switch(transition)
 end
 
-function love.draw()
-	love.graphics.setCanvas(canvas)
+function love.update(dt)
+    if Gamestate.current() ~= splash then
+      audio.Update() --This is outside the pause function because the music needs to loop
+    end
+end
+
+--[[function love.draw()
+  love.graphics.setCanvas(canvas)
 	love.graphics.clear()
+  love.graphics.setCanvas()
 
-end
+  love.graphics.draw(canvas)
+
+end]]
+
+

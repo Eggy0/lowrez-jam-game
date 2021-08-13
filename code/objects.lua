@@ -45,7 +45,7 @@ function objects.playerShipControls(deltaShip)
       objectPlayerShip.Thruster = false
       
       
-      if love.keyboard.isDown("up") then
+      if love.keyboard.isDown("up") or love.keyboard.isDown("w") then
           direction[2] = direction[2] - 1 -- Subtract 1 from y
           objectPlayerShip.Thruster = true
           for i,v in ipairs(powerupList) do
@@ -54,18 +54,18 @@ function objects.playerShipControls(deltaShip)
           isMoving = true
 
       end
-      if love.keyboard.isDown("down") then
+      if love.keyboard.isDown("down") or love.keyboard.isDown("s") then
           direction[2] = direction[2] + 1 -- Add 1 to y
                     for i,v in ipairs(powerupList) do
             v.y = v.y + (objectPlayerShip.Velocity-20)*deltaShip
           end
           isMoving = true
       end
-      if love.keyboard.isDown("left") and objectPlayerShip.x > 6  then
+      if (love.keyboard.isDown("left") or love.keyboard.isDown("a")) and objectPlayerShip.x > 6  then
           direction[1] = direction[1] - 1 -- Subtract 1 from x
           isMoving = true
       end
-      if love.keyboard.isDown("right") and objectPlayerShip.x < 58 then
+      if (love.keyboard.isDown("right") or love.keyboard.isDown("d")) and objectPlayerShip.x < 58 then
           direction[1] = direction[1] + 1 -- Add 1 to x
           isMoving = true
       end
@@ -117,7 +117,7 @@ function objects.spawnPolice(policeX, policeY) --The police ship will always fol
 	objectPolice.Velocity = 5
 	objectPolice.x = policeX
 	objectPolice.y = policeY
-  objectPolice.BulletTimer = 0.35
+  objectPolice.BulletTimer = 0.4
   objectPolice.onPlayerDeathX = onPlayerDeathX[love.math.random(#onPlayerDeathX)]
   
   
@@ -138,7 +138,9 @@ function objects.policeFollow(deltaPolice)
           bulletTimerCount = 0
         end
     end
-    
+    if objectPolice.Velocity > objectPlayerShip.Velocity + 5 then
+        objectPolice.Velocity = objectPlayerShip.Velocity + 5
+    end
     if CheckCollision(objectPlayerShip.hitX,objectPlayerShip.hitY,objectPlayerShip.hitW,objectPlayerShip.hitH, objectPolice.x-3,objectPolice.y-18,7,19) or CheckCollision(objectPlayerShip.hitX,objectPlayerShip.hitY,objectPlayerShip.hitW,objectPlayerShip.hitH, objectPolice.x-16,objectPolice.y-10,34,10) then
         objectPlayerShip.Health = 0
     end 
@@ -197,7 +199,7 @@ function objects.spawnAsteroid(asteroidX, asteroidY,asteroidVelocityX)
 	objectAsteroid.Rotation = love.math.random(0,10)
 	objectAsteroid.VelocityX = asteroidVelocityX or love.math.random(15,40)
 	objectAsteroid.VelocityY = 0
-  objectAsteroid.offsetX = 5
+  objectAsteroid.offsetX = 4
   objectAsteroid.offsetY = 4
   objectAsteroid.radius = 4
 	table.insert(asteroidList,objectAsteroid)
@@ -229,7 +231,7 @@ end
 function objects.spawnMedAsteroid(asteroidX, asteroidY,asteroidVelocityX)
   objectMedAsteroid = {}
   
-	objectMedAsteroid.Sprite = asteroidGraphics[love.math.random(#asteroidGraphics)]
+	objectMedAsteroid.Sprite = asteroidMedGraphics[love.math.random(#asteroidMedGraphics)]
 	objectMedAsteroid.x = asteroidX
 	objectMedAsteroid.y = asteroidY
 	
@@ -240,13 +242,13 @@ function objects.spawnMedAsteroid(asteroidX, asteroidY,asteroidVelocityX)
 	end
 	
   objectMedAsteroid.SpinDir = asteroidSpinningDir[love.math.random(#asteroidSpinningDir)]
-  objectMedAsteroid.SpinVel = love.math.random(0,10)
+  objectMedAsteroid.SpinVel = love.math.random(0,4)
 	objectMedAsteroid.Rotation = love.math.random(0,10)
 	objectMedAsteroid.VelocityX = asteroidVelocityX or love.math.random(15,40)
 	objectMedAsteroid.VelocityY = 0
-  objectMedAsteroid.offsetX = 5
-  objectMedAsteroid.offsetY = 4
-  objectMedAsteroid.radius = 1
+  objectMedAsteroid.offsetX = 6
+  objectMedAsteroid.offsetY = 6
+  objectMedAsteroid.radius = 6
 	table.insert(asteroidList,objectMedAsteroid)
 
 end
